@@ -1,0 +1,249 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-recreate-the-public-landing-page-and-overall-layout-to-match-the-provided-screenshots-header-with-logo-site-name-subtitle-contact-info-strip-three-feature-cards-and-a-centered-login-get-started-card-keeping-the-same-visual-theme-light-background-soft-card-shadows-blue-accents-rounded-containers",
+      "featureTitle": "Recreate the public landing page and overall layout to match the provided screenshots (header with logo + site name/subtitle, contact info strip, three feature cards, and a centered login/get-started card), keeping the same visual theme (light background, soft card shadows, blue accents, rounded containers).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-static-asset-handling-for-the-uploaded-logo-and-use-it-in-the-header-hero-as-shown-in-the-screenshots",
+      "featureTitle": "Add static asset handling for the uploaded logo and use it in the header/hero as shown in the screenshots.",
+      "files": [
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-working-authentication-using-internet-identity-for-regular-users-job-seekers-including-login-and-logout-flows-from-the-ui-elements-shown-sign-in-with-internet-identity-logout",
+      "featureTitle": "Implement working authentication using Internet Identity for regular users (job seekers) including login and logout flows from the UI elements shown (Sign In with Internet Identity, Logout).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/queries/useCallerRole.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-and-persist-a-per-user-profile-record-keyed-by-the-authenticated-principal-on-first-login-require-the-user-to-complete-an-onboarding-flow-to-enter-their-personal-details-before-accessing-the-main-dashboard",
+      "featureTitle": "Create and persist a per-user profile record keyed by the authenticated Principal; on first login, require the user to complete an onboarding flow to enter their personal details before accessing the main dashboard.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/queries/useCallerUserProfile.ts",
+        "frontend/src/pages/OnboardingPage.tsx",
+        "frontend/src/pages/dashboard/ProfilePage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-the-authenticated-user-dashboard-navigation-and-pages-shown-in-the-screenshots-browse-jobs-my-applications-messages-updates-and-profile",
+      "featureTitle": "Implement the authenticated user dashboard navigation and pages shown in the screenshots: Browse Jobs, My Applications, Messages, Updates, and Profile.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/dashboard/BrowseJobsPage.tsx",
+        "frontend/src/pages/dashboard/DashboardLayout.tsx",
+        "frontend/src/pages/dashboard/MessagesPage.tsx",
+        "frontend/src/pages/dashboard/MyApplicationsPage.tsx",
+        "frontend/src/pages/dashboard/UpdatesPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-job-vacancy-data-model-and-user-facing-browse-jobs-experience-including-search-listing-vacancy-detail-view-and-the-ability-for-a-user-to-apply-for-a-job-and-see-their-applications-in-my-applications",
+      "featureTitle": "Implement job vacancy data model and user-facing Browse Jobs experience including search, listing, vacancy detail view, and the ability for a user to apply for a job and see their applications in My Applications.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/queries/useApplications.ts",
+        "frontend/src/hooks/queries/useJobs.ts",
+        "frontend/src/pages/dashboard/BrowseJobsPage.tsx",
+        "frontend/src/pages/dashboard/JobDetailPage.tsx",
+        "frontend/src/pages/dashboard/MyApplicationsPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-an-updates-posts-feature-visible-to-users-updates-tab-where-admins-can-publish-posts-announcements-and-users-can-view-a-chronological-list",
+      "featureTitle": "Implement an Updates/Posts feature visible to users (Updates tab) where admins can publish posts/announcements and users can view a chronological list.",
+      "files": [
+        "frontend/src/hooks/queries/usePosts.ts",
+        "frontend/src/pages/dashboard/UpdatesPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-an-in-app-messages-feature-messages-tab-supporting-at-minimum-admin-to-user-messaging-broadcast-or-per-user-and-user-to-admin-messages-with-a-simple-inbox-thread-list-ui",
+      "featureTitle": "Implement an in-app Messages feature (Messages tab) supporting at minimum admin-to-user messaging (broadcast or per-user) and user-to-admin messages, with a simple inbox thread/list UI.",
+      "files": [
+        "frontend/src/hooks/queries/useMessages.ts",
+        "frontend/src/pages/dashboard/MessagesPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-an-admin-authentication-authorization-path-admin-login-and-role-based-access-control-so-admin-users-have-full-control-over-the-system-while-regular-users-cannot-access-admin-features",
+      "featureTitle": "Implement an admin authentication/authorization path (“Admin Login”) and role-based access control so admin users have full control over the system while regular users cannot access admin features.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/auth/AccessDeniedScreen.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-an-admin-panel-that-allows-admins-to-create-edit-and-delete-vacancies-create-edit-and-delete-posts-updates-and-add-delete-manage-pictures-used-in-posts-updates-or-site-content",
+      "featureTitle": "Build an admin panel that allows admins to create, edit, and delete vacancies; create, edit, and delete posts/updates; and add/delete/manage pictures used in posts/updates or site content.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/queries/useAdminMutations.ts",
+        "frontend/src/pages/admin/AdminLayout.tsx",
+        "frontend/src/pages/admin/PostsAdminPage.tsx",
+        "frontend/src/pages/admin/VacanciesAdminPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-coherent-visual-theme-matching-the-screenshots-across-all-pages-typography-spacing-card-style-buttons-neutral-backgrounds-with-blue-accents-and-apply-it-consistently-using-tailwind",
+      "featureTitle": "Create a coherent visual theme matching the screenshots across all pages (typography, spacing, card style, buttons, neutral backgrounds with blue accents) and apply it consistently using Tailwind.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

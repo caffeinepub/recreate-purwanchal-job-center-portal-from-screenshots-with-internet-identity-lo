@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Build a fully functional website matching an existing site's theme and features from provided screenshots, including user authentication with per-user profiles/onboarding and an admin panel for full content and vacancy management.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-recreate-the-public-landing-page-and-overall-layout-to-match-the-provided-screenshots-header-with-logo-site-name-subtitle-contact-info-strip-three-feature-cards-and-a-centered-login-get-started-card-keeping-the-same-visual-theme-light-background-soft-card-shadows-blue-accents-rounded-containers",
+      "title": "Recreate the public landing page and overall layout to match the provided screenshots (header with logo + site name/subtitle, contact info strip, three feature cards, and a centered login/get-started card), keeping the same visual theme (light background, soft card shadows, blue accents, rounded containers).",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-static-asset-handling-for-the-uploaded-logo-and-use-it-in-the-header-hero-as-shown-in-the-screenshots",
+      "title": "Add static asset handling for the uploaded logo and use it in the header/hero as shown in the screenshots.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-working-authentication-using-internet-identity-for-regular-users-job-seekers-including-login-and-logout-flows-from-the-ui-elements-shown-sign-in-with-internet-identity-logout",
+      "title": "Implement working authentication using Internet Identity for regular users (job seekers) including login and logout flows from the UI elements shown (Sign In with Internet Identity, Logout).",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-and-persist-a-per-user-profile-record-keyed-by-the-authenticated-principal-on-first-login-require-the-user-to-complete-an-onboarding-flow-to-enter-their-personal-details-before-accessing-the-main-dashboard",
+      "title": "Create and persist a per-user profile record keyed by the authenticated Principal; on first login, require the user to complete an onboarding flow to enter their personal details before accessing the main dashboard.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-authenticated-user-dashboard-navigation-and-pages-shown-in-the-screenshots-browse-jobs-my-applications-messages-updates-and-profile",
+      "title": "Implement the authenticated user dashboard navigation and pages shown in the screenshots: Browse Jobs, My Applications, Messages, Updates, and Profile.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-job-vacancy-data-model-and-user-facing-browse-jobs-experience-including-search-listing-vacancy-detail-view-and-the-ability-for-a-user-to-apply-for-a-job-and-see-their-applications-in-my-applications",
+      "title": "Implement job vacancy data model and user-facing Browse Jobs experience including search, listing, vacancy detail view, and the ability for a user to apply for a job and see their applications in My Applications.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-updates-posts-feature-visible-to-users-updates-tab-where-admins-can-publish-posts-announcements-and-users-can-view-a-chronological-list",
+      "title": "Implement an Updates/Posts feature visible to users (Updates tab) where admins can publish posts/announcements and users can view a chronological list.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-in-app-messages-feature-messages-tab-supporting-at-minimum-admin-to-user-messaging-broadcast-or-per-user-and-user-to-admin-messages-with-a-simple-inbox-thread-list-ui",
+      "title": "Implement an in-app Messages feature (Messages tab) supporting at minimum admin-to-user messaging (broadcast or per-user) and user-to-admin messages, with a simple inbox thread/list UI.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-admin-authentication-authorization-path-admin-login-and-role-based-access-control-so-admin-users-have-full-control-over-the-system-while-regular-users-cannot-access-admin-features",
+      "title": "Implement an admin authentication/authorization path (“Admin Login”) and role-based access control so admin users have full control over the system while regular users cannot access admin features.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-an-admin-panel-that-allows-admins-to-create-edit-and-delete-vacancies-create-edit-and-delete-posts-updates-and-add-delete-manage-pictures-used-in-posts-updates-or-site-content",
+      "title": "Build an admin panel that allows admins to create, edit, and delete vacancies; create, edit, and delete posts/updates; and add/delete/manage pictures used in posts/updates or site content.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-coherent-visual-theme-matching-the-screenshots-across-all-pages-typography-spacing-card-style-buttons-neutral-backgrounds-with-blue-accents-and-apply-it-consistently-using-tailwind",
+      "title": "Create a coherent visual theme matching the screenshots across all pages (typography, spacing, card style, buttons, neutral backgrounds with blue accents) and apply it consistently using Tailwind.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Recreate the website UI/theme and implement all features shown in the provided screenshots (including using the attached logo)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Implement working login/authentication and create a profile for each user; prompt first-time users to enter full personal details after initial login",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Build an admin panel with full control/permissions to add/delete/manage vacancies, posts, and pictures/content",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Recreate Purwanchal Job Center portal from screenshots with Internet Identity login, user profiles/onboarding, and admin CMS",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

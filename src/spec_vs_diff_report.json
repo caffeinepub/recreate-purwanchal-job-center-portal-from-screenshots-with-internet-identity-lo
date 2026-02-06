@@ -1,0 +1,161 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-06T08:21:30.626Z",
+  "summary": "The diff adds a Motoko backend actor with data models for profiles, vacancies, applications, posts, and messages, plus a React/TanStack Router frontend with dashboard/admin routes and multiple React Query hooks for CRUD operations. However, several BuildRequest items cannot be confirmed from the provided diff summary (notably the landing page/logo asset placement, onboarding/profile UI details, messages/updates UIs, and full admin authentication entry point). Some additional mechanisms (a secret-token-based access control initialization and URL parameter token) appear beyond the stated requirements.",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "Recreate the public landing page and overall layout to match the provided screenshots (header with logo + site name/subtitle, contact info strip, three feature cards, and a centered login/get-started card), including responsive behavior.",
+      "reason": "LandingPage implementation is not shown in the diff summary, so the specified structure (contact info strip + 3 feature cards + centered login/get-started card) and responsiveness cannot be verified.",
+      "evidence": [
+        "frontend/src/App.tsx (routes reference LandingPage but no LandingPage code shown)"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Add static asset handling for the uploaded logo under frontend/public/assets (or similar) and render it in the header/hero in a circular/contained presentation.",
+      "reason": "UI code references an image path (/assets/logo-job.jpg), but the diff summary does not show any added static asset under frontend/public/assets (or equivalent), so placement and handling cannot be confirmed.",
+      "evidence": [
+        "frontend/src/pages/dashboard/DashboardLayout.tsx (img src=\"/assets/logo-job.jpg\")",
+        "frontend/src/pages/admin/AdminLayout.tsx (img src=\"/assets/logo-job.jpg\")"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Implement working authentication using Internet Identity including login and logout flows from UI elements (Sign In with Internet Identity, Logout) and protect authenticated routes.",
+      "reason": "Logout flows are shown in layouts, and identity-based redirects exist, but the diff summary does not include the landing/login UI with a working \"Sign In with Internet Identity\" button; route protection is partially evidenced but full login flow from the landing card cannot be verified from provided files.",
+      "evidence": [
+        "frontend/src/pages/dashboard/DashboardLayout.tsx (redirect to '/' when !identity; Logout uses clear())",
+        "frontend/src/pages/admin/AdminLayout.tsx (redirect to '/' when !identity; Logout uses clear())",
+        "frontend/src/hooks/useInternetIdentity.ts (provider/hook exists but login UI not shown)"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "requirement": "On first login require onboarding to complete required profile fields before accessing dashboard; allow view/edit profile afterward; persist to Motoko canister keyed by Principal.",
+      "reason": "DashboardLayout redirects to /onboarding when profile is null, and backend shows profile save/get methods, but the actual onboarding form fields and Profile page edit/view implementation are not shown in the diff summary.",
+      "evidence": [
+        "frontend/src/pages/dashboard/DashboardLayout.tsx (redirects to '/onboarding' when userProfile === null)",
+        "frontend/src/hooks/queries/useCallerUserProfile.ts (get/save profile hooks)",
+        "backend/main.mo (saveCallerUserProfile/getCallerUserProfile types/methods shown, but onboarding/profile UI not shown)"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "Implement dashboard navigation/pages: Browse Jobs, My Applications, Messages, Updates, Profile; each tab routes to a dedicated view and loads data via React Query; empty states included.",
+      "reason": "Routes and the tab list exist and BrowseJobsPage shows an empty state, but MyApplicationsPage, MessagesPage, UpdatesPage, and ProfilePage implementations are not included in the diff summary, so their data loading and empty states cannot be verified.",
+      "evidence": [
+        "frontend/src/App.tsx (routes to MyApplicationsPage, MessagesPage, UpdatesPage, ProfilePage)",
+        "frontend/src/pages/dashboard/DashboardLayout.tsx (tabs for all required sections)",
+        "frontend/src/pages/dashboard/BrowseJobsPage.tsx (empty state present)"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "requirement": "Implement job vacancies + browse/search/list/detail + apply; applications persist and appear in My Applications; users only see their own applications.",
+      "reason": "BrowseJobsPage includes search and listing, JobDetailPage includes apply flow, and hooks call getMyApplications/applyForJob, but the backend methods enforcing per-user visibility and the My Applications UI are not shown in the truncated backend and omitted frontend page code.",
+      "evidence": [
+        "frontend/src/pages/dashboard/BrowseJobsPage.tsx (search/list UI)",
+        "frontend/src/pages/dashboard/JobDetailPage.tsx (apply UI)",
+        "frontend/src/hooks/queries/useApplications.ts (getMyApplications/applyForJob calls)",
+        "backend/main.mo (applications store/type exists, but relevant methods not shown due to truncation)"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Implement Updates/Posts feature: users can view chronological list; backend persists posts ordered newest-first; optional image.",
+      "reason": "Backend defines Post with image and compare-by-createdAt ordering, and hooks exist to fetch posts, but the user-facing Updates page is not shown, and backend getPosts ordering/implementation is not visible in the truncated portion.",
+      "evidence": [
+        "backend/main.mo (type Post and Post.compare shown)",
+        "frontend/src/hooks/queries/usePosts.ts (actor.getPosts())",
+        "frontend/src/App.tsx (routes to UpdatesPage, but UpdatesPage code not shown)"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "requirement": "Implement in-app Messages feature with admin-to-user (broadcast or per-user) and user-to-admin messages; users see history; backend enforces access control.",
+      "reason": "Message types and inbox/sent hooks exist, but the MessagesPage UI is not shown, and no evidence of broadcast support is visible in the diff summary; backend enforcement is not confirmable because message methods are not shown in the truncated backend.",
+      "evidence": [
+        "backend/main.mo (type Message and messages store shown)",
+        "frontend/src/hooks/queries/useMessages.ts (getInbox/getSentMessages/sendMessage)",
+        "frontend/src/App.tsx (routes to MessagesPage, but MessagesPage code not shown)"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "requirement": "Admin authentication/authorization path with an “Admin Login” entry point and admin allowlist checks on admin-only methods; non-admins blocked from admin routes and methods.",
+      "reason": "Admin route is protected in AdminLayout by role check and shows an AccessDenied screen, but the required “Admin Login” entry point on the login card is not shown, and the backend allowlist mechanism cannot be fully verified from truncated backend code.",
+      "evidence": [
+        "frontend/src/pages/admin/AdminLayout.tsx (role check; AccessDeniedScreen)",
+        "frontend/src/hooks/queries/useCallerRole.ts (getCallerUserRole call)",
+        "backend/main.mo (imports authorization/access-control and checks AccessControl.isAdmin in createJobVacancy, but allowlist/admin login entry point not shown)"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "requirement": "Admin panel CRUD for vacancies and posts/updates, plus add/delete/manage pictures used in posts/updates or site content with clear size/type limit; changes reflected after refresh/refetch.",
+      "reason": "Vacancies and Posts admin pages exist with CRUD calls and React Query invalidation, and PostsAdminPage shows image upload plumbing, but the diff summary does not show explicit file size/type limits, nor a separate image management area for deleting unused images independent of deleting a post.",
+      "evidence": [
+        "frontend/src/pages/admin/VacanciesAdminPage.tsx (CRUD UI present, truncated)",
+        "frontend/src/pages/admin/PostsAdminPage.tsx (image upload flow present, truncated; no clear size/type limit shown in visible portion)",
+        "frontend/src/hooks/queries/useAdminMutations.ts (invalidateQueries on success)"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "requirement": "Consistent Tailwind theme matching screenshots across Landing, Dashboard tabs, and Admin panel; no unstyled placeholder UI in primary flows.",
+      "reason": "Dashboard/Admin layouts use consistent Tailwind styling and gradients, but the Landing page and several dashboard pages are not shown in the diff summary, so overall consistency and absence of placeholder UI cannot be fully verified.",
+      "evidence": [
+        "frontend/src/pages/dashboard/DashboardLayout.tsx (Tailwind theme present)",
+        "frontend/src/pages/admin/AdminLayout.tsx (Tailwind theme present)",
+        "frontend/src/App.tsx (LandingPage referenced but not shown)"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Secret URL-parameter-based admin/access-control initialization using a \"caffeineAdminToken\" and an actor method \"_initializeAccessControlWithSecret\".",
+      "reason": "BuildRequest requires admin allowlist and “Admin Login” entry point, but does not mention initializing authorization via a secret token passed in a URL parameter or a special initialization method on the actor.",
+      "evidence": [
+        "frontend/src/hooks/useActor.ts (getSecretParameter('caffeineAdminToken'); actor._initializeAccessControlWithSecret(adminToken))"
+      ]
+    }
+  ],
+  "confidence": 0.62,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/auth/AccessDeniedScreen.tsx",
+    "frontend/src/hooks/queries/useAdminMutations.ts",
+    "frontend/src/hooks/queries/useApplications.ts",
+    "frontend/src/hooks/queries/useCallerRole.ts",
+    "frontend/src/hooks/queries/useCallerUserProfile.ts",
+    "frontend/src/hooks/queries/useJobs.ts",
+    "frontend/src/hooks/queries/useMessages.ts",
+    "frontend/src/hooks/queries/usePosts.ts",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/LandingPage.tsx",
+    "frontend/src/pages/OnboardingPage.tsx",
+    "frontend/src/pages/admin/AdminLayout.tsx",
+    "frontend/src/pages/admin/PostsAdminPage.tsx",
+    "frontend/src/pages/admin/VacanciesAdminPage.tsx",
+    "frontend/src/pages/dashboard/BrowseJobsPage.tsx",
+    "frontend/src/pages/dashboard/DashboardLayout.tsx",
+    "frontend/src/pages/dashboard/JobDetailPage.tsx",
+    "frontend/src/pages/dashboard/MessagesPage.tsx",
+    "frontend/src/pages/dashboard/MyApplicationsPage.tsx",
+    "frontend/src/pages/dashboard/ProfilePage.tsx",
+    "frontend/src/pages/dashboard/UpdatesPage.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

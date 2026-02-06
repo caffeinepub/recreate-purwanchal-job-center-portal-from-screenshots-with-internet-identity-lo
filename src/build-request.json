@@ -1,0 +1,219 @@
+{
+  "kind": "build_request",
+  "title": "Recreate Purwanchal Job Center portal from screenshots with Internet Identity login, user profiles/onboarding, and admin CMS",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Recreate the public landing page and overall layout to match the provided screenshots (header with logo + site name/subtitle, contact info strip, three feature cards, and a centered login/get-started card), keeping the same visual theme (light background, soft card shadows, blue accents, rounded containers).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "look at this website and make this fully functional website inclusing all the featrures in the picture and the logo is atached at last picture",
+          "Do what you can keeping the theme same"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Landing page visually matches the screenshot structure: top header area with logo and title, contact info strip, 3 feature cards (Job Seekers, Employers, Career Growth), and Get Started login card.",
+        "Responsive behavior works on narrow screens (cards stack, header stays readable)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add static asset handling for the uploaded logo and use it in the header/hero as shown in the screenshots.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "the logo is atached at last picture"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Uploaded logo file is placed under frontend/public/assets/ (or similar static public path) and rendered in the header/hero in a circular/contained presentation similar to screenshots.",
+        "Logo renders crisply without layout shift."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Implement working authentication using Internet Identity for regular users (job seekers) including login and logout flows from the UI elements shown (Sign In with Internet Identity, Logout).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "make sure all he l=login option works as well."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clicking “Sign In with Internet Identity” authenticates the user and returns them to the app in an authenticated state.",
+        "Authenticated UI shows user name/role area and a working Logout button.",
+        "Unauthenticated users cannot access authenticated routes (e.g., dashboard tabs) and are redirected to the landing/login area."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Create and persist a per-user profile record keyed by the authenticated Principal; on first login, require the user to complete an onboarding flow to enter their personal details before accessing the main dashboard.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Create a profile for every login person and also let them enter every details about themselves after logging in for first time."
+        ]
+      },
+      "acceptanceCriteria": [
+        "On first login, the user is routed to an onboarding form instead of the dashboard until required profile fields are completed.",
+        "After onboarding, the user can view and edit their profile from a Profile tab/route.",
+        "Profile data persists across refresh and re-login (stored in the Motoko canister)."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement the authenticated user dashboard navigation and pages shown in the screenshots: Browse Jobs, My Applications, Messages, Updates, and Profile.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "make this fully functional website inclusing all the featrures in the picture"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Dashboard includes a tabbed navigation matching the screenshot labels: Browse Jobs, My Applications, Messages, Updates, Profile.",
+        "Each tab routes to a dedicated view and loads data via React Query from backend methods.",
+        "Empty states are implemented (e.g., “No jobs available at the moment” in Browse Jobs)."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Implement job vacancy data model and user-facing Browse Jobs experience including search, listing, vacancy detail view, and the ability for a user to apply for a job and see their applications in My Applications.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "including all the featrures in the picture"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Jobs can be fetched and displayed in Browse Jobs with a search input filtering by title and/or company.",
+        "A job detail view shows the full vacancy information.",
+        "A logged-in user can apply to a vacancy; the application is persisted and appears in My Applications.",
+        "Users can only see their own applications."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Implement an Updates/Posts feature visible to users (Updates tab) where admins can publish posts/announcements and users can view a chronological list.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "adding pictures, posts and all"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can view a list of updates/posts with title, content, and created date (and optional image if provided).",
+        "Backend persists posts and returns them ordered newest-first."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Implement an in-app Messages feature (Messages tab) supporting at minimum admin-to-user messaging (broadcast or per-user) and user-to-admin messages, with a simple inbox thread/list UI.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "including all the featrures in the picture"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can send a message to admin; admin can reply or broadcast messages.",
+        "Users can view message history in Messages tab.",
+        "Backend enforces that users can only read their own messages; admins can read all messages."
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Implement an admin authentication/authorization path (“Admin Login”) and role-based access control so admin users have full control over the system while regular users cannot access admin features.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "And for admin givre all the access and authority and control like adding vacancies deleting adding pictures, posts and all."
+        ]
+      },
+      "acceptanceCriteria": [
+        "UI includes an “Admin Login” entry point as shown on the login card.",
+        "Backend has an admin allowlist mechanism (e.g., stored principals) and checks admin status on all admin-only methods.",
+        "Non-admin users cannot access admin routes or call admin methods (backend rejects with an error)."
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Build an admin panel that allows admins to create, edit, and delete vacancies; create, edit, and delete posts/updates; and add/delete/manage pictures used in posts/updates or site content.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "adding vacancies deleting adding pictures, posts and all"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin panel has CRUD UI for Vacancies and Posts/Updates.",
+        "Admin can upload/add an image for a post (with a clear size/type limit) and delete images that are no longer needed.",
+        "Admin changes are reflected immediately in user-facing pages after refresh (and via refetch)."
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Create a coherent visual theme matching the screenshots across all pages (typography, spacing, card style, buttons, neutral backgrounds with blue accents) and apply it consistently using Tailwind.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Do what you can keeping the theme same"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All main views (Landing, Dashboard tabs, Admin panel) share consistent card styling, spacing, and blue-accent UI.",
+        "No default/unstyled placeholder UI remains in primary flows."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must be implemented as a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Do not edit immutable frontend paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose them instead).",
+    "Use Internet Identity as the only authentication mechanism (no third-party auth providers).",
+    "All user-facing text in the app must be in English."
+  ],
+  "nonGoals": [
+    "Implementing external email/SMS notifications.",
+    "Integrating third-party social media APIs beyond simple outbound share links.",
+    "Real-time messaging via WebSockets (use request/refresh based messaging).",
+    "Payments or subscription features."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
