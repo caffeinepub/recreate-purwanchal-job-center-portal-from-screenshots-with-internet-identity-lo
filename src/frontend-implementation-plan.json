@@ -1,163 +1,24 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Frontend fixes: social/phone links, logo asset, password-only admin gate, admin password wiring, and name-based recipient search",
+  "title": "Swap static app logo asset to new uploaded image",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Replace all placeholder Facebook/WhatsApp share links with the exact user-provided destinations across the existing UI.",
+      "summary": "Replace the existing static logo file so all current /assets/logo-job.jpg <img> usages render the new uploaded logo without changing any src paths.",
       "acceptanceCriteria": [
-        "Clicking any Facebook icon/button in the app opens https://www.facebook.com/profile.php?id=61575264476230 in a new tab/window.",
-        "Clicking any WhatsApp icon/button in the app opens a WhatsApp chat link for 9804968758 in a new tab/window.",
-        "No remaining anchors in the UI still point to the placeholder https://facebook.com or https://wa.me."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Update footer social share anchors to use the provided Facebook profile URL and a working WhatsApp wa.me link for 9804968758 (open in new tab, keep rel attributes). Also scan this file for any remaining placeholder https://facebook.com or https://wa.me and replace them."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/DashboardLayout.tsx",
-          "operation": "modify",
-          "description": "Update both the Share Card and Footer social anchors to use the provided Facebook profile URL and a working WhatsApp wa.me link for 9804968758. Ensure there are no remaining placeholder https://facebook.com or https://wa.me values in this layout."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Render all displayed phone numbers as tappable tel: links without changing the current layout/styling.",
-      "acceptanceCriteria": [
-        "On mobile, tapping the displayed phone number opens the dialer with the number prefilled.",
-        "Phone numbers are rendered as accessible links (e.g., <a href=\"tel:...\">) without breaking the current layout/styling."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Convert the Landing page contact strip phone numbers (9804968758, 9814965177) and the Landing footer phone number display to accessible tel: links (e.g., tel:9804968758), preserving existing typography/colors and spacing."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/DashboardLayout.tsx",
-          "operation": "modify",
-          "description": "Convert the Dashboard header contact strip and Dashboard footer phone number display(s) to accessible tel: links for each displayed number, preserving styling and layout."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Ensure the logo file exists as a static asset and that existing /assets/logo-job.jpg references render correctly across Landing, Dashboard, and Admin UI.",
-      "acceptanceCriteria": [
-        "The logo renders (not broken/missing) on the Landing page hero section.",
-        "The logo renders on the Dashboard header and footer.",
-        "The logo renders on the Admin header.",
-        "The deployed build contains the logo at /assets/logo-job.jpg and the browser network panel shows it loading successfully (HTTP 200)."
+        "A logo image file exists at frontend/public/assets/logo-job.jpg and is included in the production build.",
+        "Landing page hero logo displays the new logo (no broken image).",
+        "Landing page footer logo displays the new logo (no broken image).",
+        "Dashboard header and footer logos display the new logo (no broken image).",
+        "Admin header logo displays the new logo (no broken image).",
+        "No code changes are required to existing image src paths (they remain /assets/logo-job.jpg)."
       ],
       "file_operations": [
         {
           "path": "frontend/public/assets/logo-job.jpg",
           "operation": "modify",
-          "description": "Add/replace the deployed static logo asset at this exact path so existing <img src=\"/assets/logo-job.jpg\" ... /> references resolve at runtime. Use the user-provided logo from the workspace assets."
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Verify all existing <img src=\"/assets/logo-job.jpg\" ... /> usages remain unchanged and continue to reference the static asset path, so the new logo loads in hero and footer."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/DashboardLayout.tsx",
-          "operation": "modify",
-          "description": "Verify all existing <img src=\"/assets/logo-job.jpg\" ... /> usages remain unchanged and continue to reference the static asset path, so the new logo loads in header and footer."
-        },
-        {
-          "path": "frontend/src/pages/admin/AdminLayout.tsx",
-          "operation": "modify",
-          "description": "Verify the Admin header continues using <img src=\"/assets/logo-job.jpg\" ... /> so it loads from the replaced static asset, while implementing the password gate changes from REQ-4."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Lock the entire /admin area behind a password-only gate using session storage, removing any Internet Identity requirement for viewing admin routes once unlocked.",
-      "acceptanceCriteria": [
-        "Visiting /admin without having entered the password shows only a password prompt and does not show vacancies/posts admin content.",
-        "Entering \"@rewan10\" unlocks the admin panel and allows navigation between admin tabs.",
-        "Entering a wrong password does not unlock the admin panel and shows an error message in English.",
-        "Refreshing the page after unlocking keeps access for the current session (until the session storage is cleared or the browser session ends)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useAdminPassword.ts",
-          "operation": "create",
-          "description": "Create a small session-storage-backed utility hook for admin password gating: read/write/clear the current session admin password, and expose an \"isUnlocked\" boolean for the current session. Keep all user-facing text out of this hook (logic only)."
-        },
-        {
-          "path": "frontend/src/components/admin/AdminPasswordGate.tsx",
-          "operation": "create",
-          "description": "Add a password prompt component for /admin routes. It should accept the password, validate it client-side against the exact string \"@rewan10\", store it via the session-storage hook on success, and show a clear English error message on failure. Keep UI minimal and consistent with existing styling (use existing shadcn/ui inputs/buttons where appropriate—verify the component's usage instructions before implementing)."
-        },
-        {
-          "path": "frontend/src/pages/admin/AdminLayout.tsx",
-          "operation": "modify",
-          "description": "Replace the current Internet Identity + role-based access guard with the new password gate. When not unlocked, render only the AdminPasswordGate (no admin content). When unlocked, render the existing admin header/nav/content. Remove redirects that force Internet Identity for /admin access. Add a \"Lock Admin\" / \"Sign out of Admin\" action that clears the session password and returns to the password prompt state. Keep all user-facing text in English."
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Update the existing \"Admin Login\" action so it no longer depends on Internet Identity for reaching /admin; it should navigate to /admin (which will show the password prompt when locked). Ensure any changed labels remain English."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Update the admin frontend to pass the session-stored admin password into password-authorized backend calls, and gracefully recover to the password prompt on invalid/expired password.",
-      "acceptanceCriteria": [
-        "Creating/updating/deleting vacancies works from the admin UI after entering the password.",
-        "Creating/updating/deleting posts works from the admin UI after entering the password.",
-        "If the session password is cleared/invalid, admin actions fail gracefully and the UI prompts again for the password."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/queries/useAdminMutations.ts",
-          "operation": "modify",
-          "description": "Update all admin React Query mutation functions (create/update/delete vacancies and posts) to include the admin password argument sourced from the session-storage admin password hook. If no password is available, fail with a clear English error. If a backend authorization failure occurs, clear the stored session password so the AdminLayout returns to the password prompt state."
-        },
-        {
-          "path": "frontend/src/pages/admin/VacanciesAdminPage.tsx",
-          "operation": "modify",
-          "description": "Ensure admin vacancy create/update/delete actions surface clear English error feedback when password is missing/invalid (e.g., show an alert or inline message) and that the UI returns to the password prompt by relying on the cleared session password state."
-        },
-        {
-          "path": "frontend/src/pages/admin/PostsAdminPage.tsx",
-          "operation": "modify",
-          "description": "Ensure admin post create/update/delete actions surface clear English error feedback when password is missing/invalid (e.g., show an alert or inline message) and that the UI returns to the password prompt by relying on the cleared session password state."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Replace the admin-only receiver Principal input in the message compose form with a name-based person search, while keeping non-admin compose behavior unchanged.",
-      "acceptanceCriteria": [
-        "As an admin, the compose form no longer asks for a principal ID directly.",
-        "As an admin, typing into the person search filters a list by first/last name and allows selecting a recipient.",
-        "After selecting a person by name and sending, the message is sent to the correct principal.",
-        "As a non-admin user, the compose form behavior remains unchanged (no recipient selection required)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/queries/useAuthorizedUserSearch.ts",
-          "operation": "create",
-          "description": "Create a React Query hook that calls the backend capability for admin-only user search (authorizedUserSearch) with the session-stored admin password and an optional search term, returning a list of profiles (principal + first/last name). If the password is missing/invalid, fail with a clear English error and clear the stored password so /admin UI returns to the password prompt state."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/MessagesPage.tsx",
-          "operation": "modify",
-          "description": "Update the admin compose UI: remove the freeform \"Receiver Principal\" input and replace it with a name-based search input + selectable results list powered by the authorized user search hook. Show the selected person's full name (optionally also a shortened principal). On send, use the selected person's principal as receiver. Preserve non-admin compose flow (no recipient selection required) and keep all user-facing text in English (use existing shadcn/ui components where appropriate—verify the component's usage instructions before implementing)."
-        },
-        {
-          "path": "frontend/src/hooks/queries/useMessages.ts",
-          "operation": "modify",
-          "description": "Adjust the send message flow as needed so non-admin users can still send messages without manual recipient entry, while admin sends use the selected recipient principal. Keep behavior for inbox/sent fetching unchanged."
+          "description": "Replace the existing logo asset with the uploaded image (use uploaded \"logo job-2.jpg\" as the source), keeping the exact filename and location so all existing <img src=\"/assets/logo-job.jpg\"> references continue to work without code changes."
         }
       ]
     }

@@ -2,12 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-placeholder-facebook-and-whatsapp-share-links-with-the-exact-user-provided-destinations-throughout-the-ui-facebook-must-open-https-www-facebook-com-profile-php-id-61575264476230-whatsapp-must-open-a-chat-to-9804968758-use-a-wa-me-link-that-works-in-mobile-desktop-update-every-place-the-app-currently-links-to-https-facebook-com-and-https-wa-me-e-g-landing-page-footer-and-dashboard-share-card-footer",
-      "featureTitle": "Replace the placeholder Facebook and WhatsApp share links with the exact user-provided destinations throughout the UI.\n- Facebook must open: https://www.facebook.com/profile.php?id=61575264476230\n- WhatsApp must open a chat to: 9804968758 (use a wa.me link that works in mobile/desktop)\nUpdate every place the app currently links to https://facebook.com and https://wa.me (e.g., Landing page footer and Dashboard share card/footer).",
-      "files": [
-        "frontend/src/pages/LandingPage.tsx",
-        "frontend/src/pages/dashboard/DashboardLayout.tsx"
-      ],
+      "featureId": "feature-replace-the-existing-static-logo-asset-so-that-all-current-img-src-assets-logo-job-jpg-usages-display-the-newly-uploaded-logo-image",
+      "featureTitle": "Replace the existing static logo asset so that all current <img src=\"/assets/logo-job.jpg\" ... /> usages display the newly uploaded logo image.",
+      "files": [],
       "components": [
         "authorization@4.0.0",
         "blob-storage@4.0.0",
@@ -19,115 +16,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-make-the-displayed-phone-number-s-tappable-to-open-the-device-dialer-wherever-the-phone-numbers-are-shown-landing-page-contact-strip-dashboard-header-contact-strip-dashboard-footer-landing-footer-render-them-as-tel-links-ensure-at-least-9804968758-is-tappable-via-tel-9804968758-and-apply-the-same-behavior-to-the-other-displayed-number-as-well",
-      "featureTitle": "Make the displayed phone number(s) tappable to open the device dialer.\n- Wherever the phone numbers are shown (Landing page contact strip, Dashboard header contact strip, Dashboard footer, Landing footer), render them as tel: links.\n- Ensure at least 9804968758 is tappable via tel:9804968758 (and apply the same behavior to the other displayed number as well).",
-      "files": [
-        "frontend/src/pages/LandingPage.tsx",
-        "frontend/src/pages/dashboard/DashboardLayout.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-provided-logo-is-actually-present-as-a-static-asset-and-used-consistently-in-all-existing-header-hero-footer-locations-where-the-app-currently-references-assets-logo-job-jpg-add-replace-the-logo-file-at-frontend-public-assets-logo-job-jpg-so-it-is-included-in-the-deployed-build-keep-the-existing-img-src-assets-logo-job-jpg-usages-working-landing-page-hero-landing-footer-dashboard-header-footer-admin-header",
-      "featureTitle": "Ensure the provided logo is actually present as a static asset and used consistently in all existing header/hero/footer locations where the app currently references /assets/logo-job.jpg.\n- Add/replace the logo file at frontend/public/assets/logo-job.jpg so it is included in the deployed build.\n- Keep the existing <img src=\"/assets/logo-job.jpg\" ... /> usages working (Landing page hero, Landing footer, Dashboard header/footer, Admin header).",
-      "files": [
-        "frontend/src/pages/LandingPage.tsx",
-        "frontend/src/pages/admin/AdminLayout.tsx",
-        "frontend/src/pages/dashboard/DashboardLayout.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-change-admin-access-to-be-password-only-using-the-exact-password-rewan10-with-no-internet-identity-requirement-and-lock-the-entire-admin-panel-behind-this-password-add-an-admin-password-gate-ux-for-admin-routes-if-the-correct-password-has-not-been-entered-in-the-current-session-show-a-password-prompt-instead-of-the-admin-ui-store-the-unlocked-state-in-session-storage-or-equivalent-so-refreshes-keep-the-admin-unlocked-for-the-current-browser-session-remove-the-current-internet-identity-dependency-for-accessing-adminlayout-do-not-require-identity-to-view-admin-when-the-password-gate-is-satisfied-keep-all-user-facing-text-in-english",
-      "featureTitle": "Change admin access to be password-only using the exact password \"@rewan10\" with no Internet Identity requirement, and lock the entire admin panel behind this password.\n- Add an admin password gate UX for /admin routes: if the correct password has not been entered in the current session, show a password prompt instead of the admin UI.\n- Store the unlocked state in session storage (or equivalent) so refreshes keep the admin unlocked for the current browser session.\n- Remove the current Internet Identity dependency for accessing AdminLayout (do not require identity to view /admin when the password gate is satisfied).\n- Keep all user-facing text in English.",
-      "files": [
-        "frontend/src/components/admin/AdminPasswordGate.tsx",
-        "frontend/src/hooks/useAdminPassword.ts",
-        "frontend/src/pages/LandingPage.tsx",
-        "frontend/src/pages/admin/AdminLayout.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-wire-the-admin-frontend-to-use-the-password-authorized-backend-methods-update-react-query-admin-mutation-hooks-frontend-src-hooks-queries-useadminmutations-ts-and-any-admin-pages-that-call-them-to-include-the-admin-password-when-calling-the-backend-ensure-the-password-is-sourced-from-the-same-session-stored-value-used-by-the-admin-password-gate-if-the-backend-rejects-due-to-missing-invalid-password-show-a-clear-english-error-and-return-the-user-to-the-password-prompt-state",
-      "featureTitle": "Wire the admin frontend to use the password-authorized backend methods.\n- Update React Query admin mutation hooks (frontend/src/hooks/queries/useAdminMutations.ts) and any admin pages that call them to include the admin password when calling the backend.\n- Ensure the password is sourced from the same session-stored value used by the admin password gate.\n- If the backend rejects due to missing/invalid password, show a clear English error and return the user to the password prompt state.",
-      "files": [
-        "frontend/src/hooks/queries/useAdminMutations.ts",
-        "frontend/src/pages/admin/PostsAdminPage.tsx",
-        "frontend/src/pages/admin/VacanciesAdminPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-replace-the-admin-only-principal-id-receiver-input-with-a-name-based-person-search-and-selection-in-the-message-compose-area-shown-to-admins-remove-the-freeform-principal-id-field-provide-a-search-input-that-filters-people-by-name-first-name-last-name-and-allows-selecting-a-person-the-selection-determines-the-receiver-principal-the-ui-must-display-the-selected-person-s-full-name-and-may-optionally-show-a-shortened-principal-for-disambiguation-keep-all-user-facing-text-in-english",
-      "featureTitle": "Replace the admin-only Principal ID receiver input with a name-based person search and selection.\n- In the message compose area shown to admins, remove the freeform Principal ID field.\n- Provide a search input that filters people by name (first name + last name) and allows selecting a person; the selection determines the receiver principal.\n- The UI must display the selected person’s full name (and may optionally show a shortened principal for disambiguation).\n- Keep all user-facing text in English.",
-      "files": [
-        "frontend/src/hooks/queries/useAuthorizedUserSearch.ts",
-        "frontend/src/pages/dashboard/MessagesPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
       ],
       "confidence": "high"
     }

@@ -1,140 +1,34 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T11:47:07.751Z",
+  "generatedAt": "2026-02-06T12:12:14.988Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 8,
-    "implemented": 6,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Replace the placeholder Facebook and WhatsApp share links with the exact user-provided destinations throughout the UI.\n- Facebook must open: https://www.facebook.com/profile.php?id=61575264476230\n- WhatsApp must open a chat to: 9804968758 (use a wa.me link that works in mobile/desktop)\nUpdate every place the app currently links to https://facebook.com and https://wa.me (e.g., Landing page footer and Dashboard share card/footer).",
+        "summary": "Replace the existing static logo asset so that all current <img src=\"/assets/logo-job.jpg\" ... /> usages display the newly uploaded logo image.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/dashboard/DashboardLayout.tsx"
+          "frontend/public/assets/logo-job.jpg"
         ],
         "matchedFiles": [
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/dashboard/DashboardLayout.tsx"
+          "frontend/public/assets/logo-job.jpg"
         ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Make the displayed phone number(s) tappable to open the device dialer.\n- Wherever the phone numbers are shown (Landing page contact strip, Dashboard header contact strip, Dashboard footer, Landing footer), render them as tel: links.\n- Ensure at least 9804968758 is tappable via tel:9804968758 (and apply the same behavior to the other displayed number as well).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/dashboard/DashboardLayout.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/dashboard/DashboardLayout.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Ensure the provided logo is actually present as a static asset and used consistently in all existing header/hero/footer locations where the app currently references /assets/logo-job.jpg.\n- Add/replace the logo file at frontend/public/assets/logo-job.jpg so it is included in the deployed build.\n- Keep the existing <img src=\"/assets/logo-job.jpg\" ... /> usages working (Landing page hero, Landing footer, Dashboard header/footer, Admin header).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/public/assets/logo-job.jpg",
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/dashboard/DashboardLayout.tsx",
-          "frontend/src/pages/admin/AdminLayout.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/dashboard/DashboardLayout.tsx",
-          "frontend/src/pages/admin/AdminLayout.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Change admin access to be password-only using the exact password \"@rewan10\" with no Internet Identity requirement, and lock the entire admin panel behind this password.\n- Add an admin password gate UX for /admin routes: if the correct password has not been entered in the current session, show a password prompt instead of the admin UI.\n- Store the unlocked state in session storage (or equivalent) so refreshes keep the admin unlocked for the current browser session.\n- Remove the current Internet Identity dependency for accessing AdminLayout (do not require identity to view /admin when the password gate is satisfied).\n- Keep all user-facing text in English.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useAdminPassword.ts",
-          "frontend/src/components/admin/AdminPasswordGate.tsx",
-          "frontend/src/pages/admin/AdminLayout.tsx",
-          "frontend/src/pages/LandingPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useAdminPassword.ts",
-          "frontend/src/components/admin/AdminPasswordGate.tsx",
-          "frontend/src/pages/admin/AdminLayout.tsx",
-          "frontend/src/pages/LandingPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Update the backend to support password-authorized admin operations (so admin CRUD works without Internet Identity).\n- Add password-guarded variants (or update existing methods) for admin-only operations used by the admin UI:\n  - createJobVacancy, updateJobVacancy, deleteJobVacancy\n  - createPost, updatePost, deletePost\n- The backend must validate the provided password exactly equals \"@rewan10\" and reject (trap) otherwise.\n- Keep backend in the existing single-actor file (backend/main.mo).",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Wire the admin frontend to use the password-authorized backend methods.\n- Update React Query admin mutation hooks (frontend/src/hooks/queries/useAdminMutations.ts) and any admin pages that call them to include the admin password when calling the backend.\n- Ensure the password is sourced from the same session-stored value used by the admin password gate.\n- If the backend rejects due to missing/invalid password, show a clear English error and return the user to the password prompt state.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/queries/useAdminMutations.ts",
-          "frontend/src/pages/admin/VacanciesAdminPage.tsx",
-          "frontend/src/pages/admin/PostsAdminPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/queries/useAdminMutations.ts",
-          "frontend/src/pages/admin/VacanciesAdminPage.tsx",
-          "frontend/src/pages/admin/PostsAdminPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Replace the admin-only Principal ID receiver input with a name-based person search and selection.\n- In the message compose area shown to admins, remove the freeform Principal ID field.\n- Provide a search input that filters people by name (first name + last name) and allows selecting a person; the selection determines the receiver principal.\n- The UI must display the selected person’s full name (and may optionally show a shortened principal for disambiguation).\n- Keep all user-facing text in English.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/queries/useAuthorizedUserSearch.ts",
-          "frontend/src/pages/dashboard/MessagesPage.tsx",
-          "frontend/src/hooks/queries/useMessages.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/queries/useAuthorizedUserSearch.ts",
-          "frontend/src/pages/dashboard/MessagesPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Add backend support needed for name-based person search.\n- Implement a query method that returns a list of user profiles with their principals (e.g., [{ principal; firstName; lastName; email? }]).\n- Implement optional server-side filtering by a provided name search term (case-insensitive contains match on firstName/lastName/full name).\n- Ensure the method is only callable by an authorized admin path consistent with the new password-only admin model (i.e., require the admin password).",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/admin/AdminPasswordGate.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/queries/useAdminMutations.ts",
-    "frontend/src/hooks/queries/useAuthorizedUserSearch.ts",
-    "frontend/src/hooks/useAdminPassword.ts",
-    "frontend/src/pages/LandingPage.tsx",
-    "frontend/src/pages/admin/AdminLayout.tsx",
-    "frontend/src/pages/admin/PostsAdminPage.tsx",
-    "frontend/src/pages/admin/VacanciesAdminPage.tsx",
-    "frontend/src/pages/dashboard/DashboardLayout.tsx",
-    "frontend/src/pages/dashboard/MessagesPage.tsx",
+    "frontend/public/assets/generated/logo-job.jpg",
+    "frontend/public/assets/logo-job.jpg",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
