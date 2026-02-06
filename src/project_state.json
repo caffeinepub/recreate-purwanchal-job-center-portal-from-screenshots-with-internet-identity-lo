@@ -1,96 +1,62 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Build a fully functional website matching an existing site's theme and features from provided screenshots, including user authentication with per-user profiles/onboarding and an admin panel for full content and vacancy management.",
-  "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "summary": "Build/update an app with social/contact links (Facebook, WhatsApp, tap-to-call), branding logo in header, and a password-only admin panel with name-based search.",
+  "architectural_notes": [
+    "Admin authentication should be password-only (\"@rewan10\") and gate access to all admin panel routes/features.",
+    "Admin panel search should operate on user/person name rather than Principal ID."
+  ],
+  "known_issues": [
+    "Deployment/build encountered an internal configuration issue during updates.",
+    "Logo was reported as not added after deployment; admin password-only login, admin panel lock, and name-based search changes may not have been applied."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-recreate-the-public-landing-page-and-overall-layout-to-match-the-provided-screenshots-header-with-logo-site-name-subtitle-contact-info-strip-three-feature-cards-and-a-centered-login-get-started-card-keeping-the-same-visual-theme-light-background-soft-card-shadows-blue-accents-rounded-containers",
-      "title": "Recreate the public landing page and overall layout to match the provided screenshots (header with logo + site name/subtitle, contact info strip, three feature cards, and a centered login/get-started card), keeping the same visual theme (light background, soft card shadows, blue accents, rounded containers).",
+      "id": "feature-replace-the-placeholder-facebook-and-whatsapp-share-links-with-the-exact-user-provided-destinations-throughout-the-ui-facebook-must-open-https-www-facebook-com-profile-php-id-61575264476230-whatsapp-must-open-a-chat-to-9804968758-use-a-wa-me-link-that-works-in-mobile-desktop-update-every-place-the-app-currently-links-to-https-facebook-com-and-https-wa-me-e-g-landing-page-footer-and-dashboard-share-card-footer",
+      "title": "Replace the placeholder Facebook and WhatsApp share links with the exact user-provided destinations throughout the UI.\n- Facebook must open: https://www.facebook.com/profile.php?id=61575264476230\n- WhatsApp must open a chat to: 9804968758 (use a wa.me link that works in mobile/desktop)\nUpdate every place the app currently links to https://facebook.com and https://wa.me (e.g., Landing page footer and Dashboard share card/footer).",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-static-asset-handling-for-the-uploaded-logo-and-use-it-in-the-header-hero-as-shown-in-the-screenshots",
-      "title": "Add static asset handling for the uploaded logo and use it in the header/hero as shown in the screenshots.",
+      "id": "feature-make-the-displayed-phone-number-s-tappable-to-open-the-device-dialer-wherever-the-phone-numbers-are-shown-landing-page-contact-strip-dashboard-header-contact-strip-dashboard-footer-landing-footer-render-them-as-tel-links-ensure-at-least-9804968758-is-tappable-via-tel-9804968758-and-apply-the-same-behavior-to-the-other-displayed-number-as-well",
+      "title": "Make the displayed phone number(s) tappable to open the device dialer.\n- Wherever the phone numbers are shown (Landing page contact strip, Dashboard header contact strip, Dashboard footer, Landing footer), render them as tel: links.\n- Ensure at least 9804968758 is tappable via tel:9804968758 (and apply the same behavior to the other displayed number as well).",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-working-authentication-using-internet-identity-for-regular-users-job-seekers-including-login-and-logout-flows-from-the-ui-elements-shown-sign-in-with-internet-identity-logout",
-      "title": "Implement working authentication using Internet Identity for regular users (job seekers) including login and logout flows from the UI elements shown (Sign In with Internet Identity, Logout).",
+      "id": "feature-ensure-the-provided-logo-is-actually-present-as-a-static-asset-and-used-consistently-in-all-existing-header-hero-footer-locations-where-the-app-currently-references-assets-logo-job-jpg-add-replace-the-logo-file-at-frontend-public-assets-logo-job-jpg-so-it-is-included-in-the-deployed-build-keep-the-existing-img-src-assets-logo-job-jpg-usages-working-landing-page-hero-landing-footer-dashboard-header-footer-admin-header",
+      "title": "Ensure the provided logo is actually present as a static asset and used consistently in all existing header/hero/footer locations where the app currently references /assets/logo-job.jpg.\n- Add/replace the logo file at frontend/public/assets/logo-job.jpg so it is included in the deployed build.\n- Keep the existing <img src=\"/assets/logo-job.jpg\" ... /> usages working (Landing page hero, Landing footer, Dashboard header/footer, Admin header).",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-and-persist-a-per-user-profile-record-keyed-by-the-authenticated-principal-on-first-login-require-the-user-to-complete-an-onboarding-flow-to-enter-their-personal-details-before-accessing-the-main-dashboard",
-      "title": "Create and persist a per-user profile record keyed by the authenticated Principal; on first login, require the user to complete an onboarding flow to enter their personal details before accessing the main dashboard.",
+      "id": "feature-change-admin-access-to-be-password-only-using-the-exact-password-rewan10-with-no-internet-identity-requirement-and-lock-the-entire-admin-panel-behind-this-password-add-an-admin-password-gate-ux-for-admin-routes-if-the-correct-password-has-not-been-entered-in-the-current-session-show-a-password-prompt-instead-of-the-admin-ui-store-the-unlocked-state-in-session-storage-or-equivalent-so-refreshes-keep-the-admin-unlocked-for-the-current-browser-session-remove-the-current-internet-identity-dependency-for-accessing-adminlayout-do-not-require-identity-to-view-admin-when-the-password-gate-is-satisfied-keep-all-user-facing-text-in-english",
+      "title": "Change admin access to be password-only using the exact password \"@rewan10\" with no Internet Identity requirement, and lock the entire admin panel behind this password.\n- Add an admin password gate UX for /admin routes: if the correct password has not been entered in the current session, show a password prompt instead of the admin UI.\n- Store the unlocked state in session storage (or equivalent) so refreshes keep the admin unlocked for the current browser session.\n- Remove the current Internet Identity dependency for accessing AdminLayout (do not require identity to view /admin when the password gate is satisfied).\n- Keep all user-facing text in English.",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-the-authenticated-user-dashboard-navigation-and-pages-shown-in-the-screenshots-browse-jobs-my-applications-messages-updates-and-profile",
-      "title": "Implement the authenticated user dashboard navigation and pages shown in the screenshots: Browse Jobs, My Applications, Messages, Updates, and Profile.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-job-vacancy-data-model-and-user-facing-browse-jobs-experience-including-search-listing-vacancy-detail-view-and-the-ability-for-a-user-to-apply-for-a-job-and-see-their-applications-in-my-applications",
-      "title": "Implement job vacancy data model and user-facing Browse Jobs experience including search, listing, vacancy detail view, and the ability for a user to apply for a job and see their applications in My Applications.",
+      "id": "feature-wire-the-admin-frontend-to-use-the-password-authorized-backend-methods-update-react-query-admin-mutation-hooks-frontend-src-hooks-queries-useadminmutations-ts-and-any-admin-pages-that-call-them-to-include-the-admin-password-when-calling-the-backend-ensure-the-password-is-sourced-from-the-same-session-stored-value-used-by-the-admin-password-gate-if-the-backend-rejects-due-to-missing-invalid-password-show-a-clear-english-error-and-return-the-user-to-the-password-prompt-state",
+      "title": "Wire the admin frontend to use the password-authorized backend methods.\n- Update React Query admin mutation hooks (frontend/src/hooks/queries/useAdminMutations.ts) and any admin pages that call them to include the admin password when calling the backend.\n- Ensure the password is sourced from the same session-stored value used by the admin password gate.\n- If the backend rejects due to missing/invalid password, show a clear English error and return the user to the password prompt state.",
       "reqIds": [
         "REQ-6"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-an-updates-posts-feature-visible-to-users-updates-tab-where-admins-can-publish-posts-announcements-and-users-can-view-a-chronological-list",
-      "title": "Implement an Updates/Posts feature visible to users (Updates tab) where admins can publish posts/announcements and users can view a chronological list.",
+      "id": "feature-replace-the-admin-only-principal-id-receiver-input-with-a-name-based-person-search-and-selection-in-the-message-compose-area-shown-to-admins-remove-the-freeform-principal-id-field-provide-a-search-input-that-filters-people-by-name-first-name-last-name-and-allows-selecting-a-person-the-selection-determines-the-receiver-principal-the-ui-must-display-the-selected-person-s-full-name-and-may-optionally-show-a-shortened-principal-for-disambiguation-keep-all-user-facing-text-in-english",
+      "title": "Replace the admin-only Principal ID receiver input with a name-based person search and selection.\n- In the message compose area shown to admins, remove the freeform Principal ID field.\n- Provide a search input that filters people by name (first name + last name) and allows selecting a person; the selection determines the receiver principal.\n- The UI must display the selected person’s full name (and may optionally show a shortened principal for disambiguation).\n- Keep all user-facing text in English.",
       "reqIds": [
         "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-an-in-app-messages-feature-messages-tab-supporting-at-minimum-admin-to-user-messaging-broadcast-or-per-user-and-user-to-admin-messages-with-a-simple-inbox-thread-list-ui",
-      "title": "Implement an in-app Messages feature (Messages tab) supporting at minimum admin-to-user messaging (broadcast or per-user) and user-to-admin messages, with a simple inbox thread/list UI.",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-an-admin-authentication-authorization-path-admin-login-and-role-based-access-control-so-admin-users-have-full-control-over-the-system-while-regular-users-cannot-access-admin-features",
-      "title": "Implement an admin authentication/authorization path (“Admin Login”) and role-based access control so admin users have full control over the system while regular users cannot access admin features.",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-build-an-admin-panel-that-allows-admins-to-create-edit-and-delete-vacancies-create-edit-and-delete-posts-updates-and-add-delete-manage-pictures-used-in-posts-updates-or-site-content",
-      "title": "Build an admin panel that allows admins to create, edit, and delete vacancies; create, edit, and delete posts/updates; and add/delete/manage pictures used in posts/updates or site content.",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-a-coherent-visual-theme-matching-the-screenshots-across-all-pages-typography-spacing-card-style-buttons-neutral-backgrounds-with-blue-accents-and-apply-it-consistently-using-tailwind",
-      "title": "Create a coherent visual theme matching the screenshots across all pages (typography, spacing, card style, buttons, neutral backgrounds with blue accents) and apply it consistently using Tailwind.",
-      "reqIds": [
-        "REQ-11"
       ],
       "version": 1
     }
@@ -98,25 +64,64 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Recreate the website UI/theme and implement all features shown in the provided screenshots (including using the attached logo)",
+      "summary": "Add Facebook link/button opening the provided Facebook profile URL",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Implement working login/authentication and create a profile for each user; prompt first-time users to enter full personal details after initial login",
+      "summary": "Add WhatsApp link/button for number 9804968758 to open a WhatsApp chat",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Build an admin panel with full control/permissions to add/delete/manage vacancies, posts, and pictures/content",
+      "summary": "Make the displayed phone number tappable to open the device call/dialer app",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Insert the user-provided logo into the app header",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Change admin login to password-only using \"@rewan10\" (no other auth)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Restrict/lock the entire admin panel until the correct admin password is entered",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Replace admin search from Principal ID search to searching by the person's name",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Update the backend to support password-authorized admin operations (so admin CRUD works without Internet Identity).\n- Add password-guarded variants (or update existing methods) for admin-only operations used by the admin UI:\n  - createJobVacancy, updateJobVacancy, deleteJobVacancy\n  - createPost, updatePost, deletePost\n- The backend must validate the provided password exactly equals \"@rewan10\" and reject (trap) otherwise.\n- Keep backend in the existing single-actor file (backend/main.mo).",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Add backend support needed for name-based person search.\n- Implement a query method that returns a list of user profiles with their principals (e.g., [{ principal; firstName; lastName; email? }]).\n- Implement optional server-side filtering by a provided name search term (case-insensitive contains match on firstName/lastName/full name).\n- Ensure the method is only callable by an authorized admin path consistent with the new password-only admin model (i.e., require the admin password).",
+      "reqIds": [
+        "REQ-8"
+      ],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Recreate Purwanchal Job Center portal from screenshots with Internet Identity login, user profiles/onboarding, and admin CMS",
+  "projectName": "Fix branding/social links and implement password-only admin access with name-based user search",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

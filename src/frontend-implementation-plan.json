@@ -1,393 +1,163 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Purwanchal Job Center portal (frontend): landing + II auth + user dashboard + admin CMS UI",
+  "title": "Frontend fixes: social/phone links, logo asset, password-only admin gate, admin password wiring, and name-based recipient search",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Recreate the public landing page layout to match screenshots (header/logo/title, contact strip, 3 feature cards, centered get-started/login card) with responsive behavior.",
+      "summary": "Replace all placeholder Facebook/WhatsApp share links with the exact user-provided destinations across the existing UI.",
       "acceptanceCriteria": [
-        "Landing page visually matches the screenshot structure: top header area with logo and title, contact info strip, 3 feature cards (Job Seekers, Employers, Career Growth), and Get Started login card.",
-        "Responsive behavior works on narrow screens (cards stack, header stays readable)."
+        "Clicking any Facebook icon/button in the app opens https://www.facebook.com/profile.php?id=61575264476230 in a new tab/window.",
+        "Clicking any WhatsApp icon/button in the app opens a WhatsApp chat link for 9804968758 in a new tab/window.",
+        "No remaining anchors in the UI still point to the placeholder https://facebook.com or https://wa.me."
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "create",
-          "description": "Implement the public landing page UI structure (header/hero, contact info strip, 3 feature cards, and the Get Started card) styled with Tailwind to match screenshots. Verify the component's usage instructions before implementing."
+          "operation": "modify",
+          "description": "Update footer social share anchors to use the provided Facebook profile URL and a working WhatsApp wa.me link for 9804968758 (open in new tab, keep rel attributes). Also scan this file for any remaining placeholder https://facebook.com or https://wa.me and replace them."
         },
         {
-          "path": "frontend/src/components/site/SiteHeader.tsx",
-          "operation": "create",
-          "description": "Create a reusable header component matching screenshot layout (logo + site name/subtitle + authenticated user area placeholder). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/site/ContactStrip.tsx",
-          "operation": "create",
-          "description": "Create the contact info strip (phone numbers + address) styled as a centered rounded container as shown. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/site/FeatureCards.tsx",
-          "operation": "create",
-          "description": "Create the three feature cards section (Job Seekers, Employers, Career Growth) with icon container + title + description and responsive stacking. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/site/GetStartedCard.tsx",
-          "operation": "create",
-          "description": "Create the centered Get Started card with the two actions shown (Internet Identity sign-in and Admin Login). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "create",
-          "description": "Wire the landing page as the default route and ensure overall app layout matches screenshot composition (light background, centered content). Verify the component's usage instructions before implementing."
+          "path": "frontend/src/pages/dashboard/DashboardLayout.tsx",
+          "operation": "modify",
+          "description": "Update both the Share Card and Footer social anchors to use the provided Facebook profile URL and a working WhatsApp wa.me link for 9804968758. Ensure there are no remaining placeholder https://facebook.com or https://wa.me values in this layout."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add static asset handling for the uploaded logo and render it in the header/hero similarly to screenshots.",
+      "summary": "Render all displayed phone numbers as tappable tel: links without changing the current layout/styling.",
       "acceptanceCriteria": [
-        "Uploaded logo file is placed under frontend/public/assets/ (or similar static public path) and rendered in the header/hero in a circular/contained presentation similar to screenshots.",
-        "Logo renders crisply without layout shift."
+        "On mobile, tapping the displayed phone number opens the dialer with the number prefilled.",
+        "Phone numbers are rendered as accessible links (e.g., <a href=\"tel:...\">) without breaking the current layout/styling."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/logo-job.jpg",
-          "operation": "create",
-          "description": "Add the provided logo file as a static public asset for use in the header/hero."
-        },
-        {
-          "path": "frontend/src/components/site/SiteHeader.tsx",
-          "operation": "modify",
-          "description": "Render the static logo from frontend/public/assets/logo-job.jpg in a circular/contained style and reserve fixed space to avoid layout shift. Verify the component's usage instructions before implementing."
-        },
-        {
           "path": "frontend/src/pages/LandingPage.tsx",
           "operation": "modify",
-          "description": "Ensure the hero/header area uses the logo presentation consistent with screenshots (centered logo above title on landing). Verify the component's usage instructions before implementing."
+          "description": "Convert the Landing page contact strip phone numbers (9804968758, 9814965177) and the Landing footer phone number display to accessible tel: links (e.g., tel:9804968758), preserving existing typography/colors and spacing."
+        },
+        {
+          "path": "frontend/src/pages/dashboard/DashboardLayout.tsx",
+          "operation": "modify",
+          "description": "Convert the Dashboard header contact strip and Dashboard footer phone number display(s) to accessible tel: links for each displayed number, preserving styling and layout."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Implement working Internet Identity authentication flows in UI (sign-in, logout) and guard authenticated routes.",
+      "summary": "Ensure the logo file exists as a static asset and that existing /assets/logo-job.jpg references render correctly across Landing, Dashboard, and Admin UI.",
       "acceptanceCriteria": [
-        "Clicking “Sign In with Internet Identity” authenticates the user and returns them to the app in an authenticated state.",
-        "Authenticated UI shows user name/role area and a working Logout button.",
-        "Unauthenticated users cannot access authenticated routes (e.g., dashboard tabs) and are redirected to the landing/login area."
+        "The logo renders (not broken/missing) on the Landing page hero section.",
+        "The logo renders on the Dashboard header and footer.",
+        "The logo renders on the Admin header.",
+        "The deployed build contains the logo at /assets/logo-job.jpg and the browser network panel shows it loading successfully (HTTP 200)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/auth/AuthButtons.tsx",
-          "operation": "create",
-          "description": "Create UI actions for sign-in (Internet Identity) and logout using the existing useInternetIdentity hook and React Query cache clearing as recommended by the authorization component guidance. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/auth/RequireAuth.tsx",
-          "operation": "create",
-          "description": "Add a route guard wrapper that redirects unauthenticated users to the landing/get-started area. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/queries/useCallerRole.ts",
-          "operation": "create",
-          "description": "Add a React Query hook to load the caller role via backend getCallerUserRole()/isCallerAdmin() for conditional UI (user vs admin). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/public/assets/logo-job.jpg",
           "operation": "modify",
-          "description": "Register authenticated routes (dashboard/admin) behind RequireAuth and ensure default routing redirects unauthenticated users to landing. Verify the component's usage instructions before implementing."
+          "description": "Add/replace the deployed static logo asset at this exact path so existing <img src=\"/assets/logo-job.jpg\" ... /> references resolve at runtime. Use the user-provided logo from the workspace assets."
         },
         {
-          "path": "frontend/src/components/site/SiteHeader.tsx",
+          "path": "frontend/src/pages/LandingPage.tsx",
           "operation": "modify",
-          "description": "Show authenticated user area (display profile name when available; show Logout button) consistent with screenshot placement. Verify the component's usage instructions before implementing."
+          "description": "Verify all existing <img src=\"/assets/logo-job.jpg\" ... /> usages remain unchanged and continue to reference the static asset path, so the new logo loads in hero and footer."
+        },
+        {
+          "path": "frontend/src/pages/dashboard/DashboardLayout.tsx",
+          "operation": "modify",
+          "description": "Verify all existing <img src=\"/assets/logo-job.jpg\" ... /> usages remain unchanged and continue to reference the static asset path, so the new logo loads in header and footer."
+        },
+        {
+          "path": "frontend/src/pages/admin/AdminLayout.tsx",
+          "operation": "modify",
+          "description": "Verify the Admin header continues using <img src=\"/assets/logo-job.jpg\" ... /> so it loads from the replaced static asset, while implementing the password gate changes from REQ-4."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Create per-user profile onboarding on first login and allow view/edit from Profile tab, persisting via backend methods.",
+      "summary": "Lock the entire /admin area behind a password-only gate using session storage, removing any Internet Identity requirement for viewing admin routes once unlocked.",
       "acceptanceCriteria": [
-        "On first login, the user is routed to an onboarding form instead of the dashboard until required profile fields are completed.",
-        "After onboarding, the user can view and edit their profile from a Profile tab/route.",
-        "Profile data persists across refresh and re-login (stored in the Motoko canister)."
+        "Visiting /admin without having entered the password shows only a password prompt and does not show vacancies/posts admin content.",
+        "Entering \"@rewan10\" unlocks the admin panel and allows navigation between admin tabs.",
+        "Entering a wrong password does not unlock the admin panel and shows an error message in English.",
+        "Refreshing the page after unlocking keeps access for the current session (until the session storage is cleared or the browser session ends)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/queries/useCallerUserProfile.ts",
+          "path": "frontend/src/hooks/useAdminPassword.ts",
           "operation": "create",
-          "description": "Implement React Query hooks for getCallerUserProfile() and saveCallerUserProfile() and follow the authorization component guidance to avoid profile setup flash (actor dependency + isFetched gating). Verify the component's usage instructions before implementing."
+          "description": "Create a small session-storage-backed utility hook for admin password gating: read/write/clear the current session admin password, and expose an \"isUnlocked\" boolean for the current session. Keep all user-facing text out of this hook (logic only)."
         },
         {
-          "path": "frontend/src/pages/OnboardingPage.tsx",
+          "path": "frontend/src/components/admin/AdminPasswordGate.tsx",
           "operation": "create",
-          "description": "Create onboarding form for firstName/lastName/email and optional resume upload using blob-storage ExternalBlob; on success route to dashboard. Verify the component's usage instructions before implementing."
+          "description": "Add a password prompt component for /admin routes. It should accept the password, validate it client-side against the exact string \"@rewan10\", store it via the session-storage hook on success, and show a clear English error message on failure. Keep UI minimal and consistent with existing styling (use existing shadcn/ui inputs/buttons where appropriate—verify the component's usage instructions before implementing)."
         },
         {
-          "path": "frontend/src/pages/dashboard/ProfilePage.tsx",
-          "operation": "create",
-          "description": "Create Profile tab view to display and edit user profile fields and optional resume upload using blob-storage ExternalBlob. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/auth/RequireOnboarded.tsx",
-          "operation": "create",
-          "description": "Create a guard that, when authenticated but profile is missing, routes the user to onboarding before allowing dashboard access. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/pages/admin/AdminLayout.tsx",
           "operation": "modify",
-          "description": "Wire /onboarding route and apply RequireOnboarded to dashboard routes after RequireAuth. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Implement authenticated dashboard navigation (tabs) and pages: Browse Jobs, My Applications, Messages, Updates, Profile; each loads via React Query with empty states.",
-      "acceptanceCriteria": [
-        "Dashboard includes a tabbed navigation matching the screenshot labels: Browse Jobs, My Applications, Messages, Updates, Profile.",
-        "Each tab routes to a dedicated view and loads data via React Query from backend methods.",
-        "Empty states are implemented (e.g., “No jobs available at the moment” in Browse Jobs)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/dashboard/DashboardLayout.tsx",
-          "operation": "create",
-          "description": "Create the authenticated dashboard shell with tabbed navigation matching screenshot labels and a content outlet area. Verify the component's usage instructions before implementing."
+          "description": "Replace the current Internet Identity + role-based access guard with the new password gate. When not unlocked, render only the AdminPasswordGate (no admin content). When unlocked, render the existing admin header/nav/content. Remove redirects that force Internet Identity for /admin access. Add a \"Lock Admin\" / \"Sign out of Admin\" action that clears the session password and returns to the password prompt state. Keep all user-facing text in English."
         },
         {
-          "path": "frontend/src/components/site/Footer.tsx",
-          "operation": "create",
-          "description": "Add a footer matching screenshot structure (copyright + share links block) for landing and dashboard pages. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/BrowseJobsPage.tsx",
-          "operation": "create",
-          "description": "Create Browse Jobs tab view: title/subtitle, search input, and jobs list with empty state. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/MyApplicationsPage.tsx",
-          "operation": "create",
-          "description": "Create My Applications tab view listing current user's applications with empty state. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/MessagesPage.tsx",
-          "operation": "create",
-          "description": "Create Messages tab view showing inbox/sent lists and a compose/reply panel. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/UpdatesPage.tsx",
-          "operation": "create",
-          "description": "Create Updates tab view showing chronological posts list (newest-first as returned by backend) with empty state. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/pages/LandingPage.tsx",
           "operation": "modify",
-          "description": "Register dashboard routes for each tab and ensure navigation wiring matches labels: Browse Jobs, My Applications, Messages, Updates, Profile. Verify the component's usage instructions before implementing."
+          "description": "Update the existing \"Admin Login\" action so it no longer depends on Internet Identity for reaching /admin; it should navigate to /admin (which will show the password prompt when locked). Ensure any changed labels remain English."
         }
       ]
     },
     {
       "id": "REQ-6",
-      "summary": "Implement Browse Jobs experience: search, list, detail, apply flow; show applications in My Applications (user-only).",
+      "summary": "Update the admin frontend to pass the session-stored admin password into password-authorized backend calls, and gracefully recover to the password prompt on invalid/expired password.",
       "acceptanceCriteria": [
-        "Jobs can be fetched and displayed in Browse Jobs with a search input filtering by title and/or company.",
-        "A job detail view shows the full vacancy information.",
-        "A logged-in user can apply to a vacancy; the application is persisted and appears in My Applications.",
-        "Users can only see their own applications."
+        "Creating/updating/deleting vacancies works from the admin UI after entering the password.",
+        "Creating/updating/deleting posts works from the admin UI after entering the password.",
+        "If the session password is cleared/invalid, admin actions fail gracefully and the UI prompts again for the password."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/queries/useJobs.ts",
-          "operation": "create",
-          "description": "Create React Query hooks for getJobVacancies(), searchJobVacancies(), and getJobVacancy(jobId) to support listing, searching, and detail fetch. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/queries/useApplications.ts",
-          "operation": "create",
-          "description": "Create React Query hooks for applyForJob(), getMyApplications(), and cache invalidation/refetch after applying. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/JobDetailPage.tsx",
-          "operation": "create",
-          "description": "Add a job vacancy detail view (routed from Browse Jobs) showing full vacancy info and an apply form (cover letter + optional resume using blob-storage ExternalBlob). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/BrowseJobsPage.tsx",
+          "path": "frontend/src/hooks/queries/useAdminMutations.ts",
           "operation": "modify",
-          "description": "Wire search input to searchJobVacancies(), render list items linking to the job detail route, and show empty state text matching screenshot intent. Verify the component's usage instructions before implementing."
+          "description": "Update all admin React Query mutation functions (create/update/delete vacancies and posts) to include the admin password argument sourced from the session-storage admin password hook. If no password is available, fail with a clear English error. If a backend authorization failure occurs, clear the stored session password so the AdminLayout returns to the password prompt state."
         },
         {
-          "path": "frontend/src/pages/dashboard/MyApplicationsPage.tsx",
+          "path": "frontend/src/pages/admin/VacanciesAdminPage.tsx",
           "operation": "modify",
-          "description": "Fetch and render getMyApplications() results and show a clear empty state when none exist. Verify the component's usage instructions before implementing."
+          "description": "Ensure admin vacancy create/update/delete actions surface clear English error feedback when password is missing/invalid (e.g., show an alert or inline message) and that the UI returns to the password prompt by relying on the cleared session password state."
         },
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/pages/admin/PostsAdminPage.tsx",
           "operation": "modify",
-          "description": "Register a nested route for job detail (e.g., under dashboard) and ensure it is guarded by auth/onboarding. Verify the component's usage instructions before implementing."
+          "description": "Ensure admin post create/update/delete actions surface clear English error feedback when password is missing/invalid (e.g., show an alert or inline message) and that the UI returns to the password prompt by relying on the cleared session password state."
         }
       ]
     },
     {
       "id": "REQ-7",
-      "summary": "Implement user Updates tab showing admin-created posts (title/content/date and optional image) as a chronological list.",
+      "summary": "Replace the admin-only receiver Principal input in the message compose form with a name-based person search, while keeping non-admin compose behavior unchanged.",
       "acceptanceCriteria": [
-        "Users can view a list of updates/posts with title, content, and created date (and optional image if provided).",
-        "Backend persists posts and returns them ordered newest-first."
+        "As an admin, the compose form no longer asks for a principal ID directly.",
+        "As an admin, typing into the person search filters a list by first/last name and allows selecting a recipient.",
+        "After selecting a person by name and sending, the message is sent to the correct principal.",
+        "As a non-admin user, the compose form behavior remains unchanged (no recipient selection required)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/queries/usePosts.ts",
+          "path": "frontend/src/hooks/queries/useAuthorizedUserSearch.ts",
           "operation": "create",
-          "description": "Create React Query hook(s) for getPosts() to load updates; include support for rendering optional image via blob-storage ExternalBlob.getDirectURL(). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/updates/PostCard.tsx",
-          "operation": "create",
-          "description": "Create a Post card component to render title/content/date and optional image using ExternalBlob direct URL for performance. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/dashboard/UpdatesPage.tsx",
-          "operation": "modify",
-          "description": "Fetch posts via usePosts hook and render chronological list with empty state; show images when present. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Implement in-app messaging UI (inbox/history + compose) supporting user-to-admin and admin-to-user messaging at minimum.",
-      "acceptanceCriteria": [
-        "Users can send a message to admin; admin can reply or broadcast messages.",
-        "Users can view message history in Messages tab.",
-        "Backend enforces that users can only read their own messages; admins can read all messages."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/queries/useMessages.ts",
-          "operation": "create",
-          "description": "Create React Query hooks for getInbox(), getSentMessages(), and sendMessage(), including refetch/invalidation after sending. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/messages/InboxList.tsx",
-          "operation": "create",
-          "description": "Create UI component to list messages (inbox/sent) and show a simple thread/history view. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/messages/MessageComposer.tsx",
-          "operation": "create",
-          "description": "Create a compose box that sends messages via sendMessage(); support replying by pre-filling receiver. Verify the component's usage instructions before implementing."
+          "description": "Create a React Query hook that calls the backend capability for admin-only user search (authorizedUserSearch) with the session-stored admin password and an optional search term, returning a list of profiles (principal + first/last name). If the password is missing/invalid, fail with a clear English error and clear the stored password so /admin UI returns to the password prompt state."
         },
         {
           "path": "frontend/src/pages/dashboard/MessagesPage.tsx",
           "operation": "modify",
-          "description": "Wire inbox/sent queries and compose/reply UI; add empty states and error handling for authorization failures. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Add an Admin Login entry point and role-based UI gating so non-admins cannot access admin routes/features.",
-      "acceptanceCriteria": [
-        "UI includes an “Admin Login” entry point as shown on the login card.",
-        "Backend has an admin allowlist mechanism (e.g., stored principals) and checks admin status on all admin-only methods.",
-        "Non-admin users cannot access admin routes or call admin methods (backend rejects with an error)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/auth/RequireAdmin.tsx",
-          "operation": "create",
-          "description": "Create an admin-only guard that checks backend isCallerAdmin() (or caller role) and shows an access denied screen or redirects if not admin. Verify the component's usage instructions before implementing."
+          "description": "Update the admin compose UI: remove the freeform \"Receiver Principal\" input and replace it with a name-based search input + selectable results list powered by the authorized user search hook. Show the selected person's full name (optionally also a shortened principal). On send, use the selected person's principal as receiver. Preserve non-admin compose flow (no recipient selection required) and keep all user-facing text in English (use existing shadcn/ui components where appropriate—verify the component's usage instructions before implementing)."
         },
         {
-          "path": "frontend/src/components/auth/AccessDeniedScreen.tsx",
-          "operation": "create",
-          "description": "Create an AccessDeniedScreen component for unauthorized attempts (per authorization component UI guidance). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/site/GetStartedCard.tsx",
+          "path": "frontend/src/hooks/queries/useMessages.ts",
           "operation": "modify",
-          "description": "Implement “Admin Login” entry point behavior: trigger Internet Identity login if needed, then navigate to admin panel route guarded by RequireAdmin. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add admin panel route(s) and protect them with RequireAuth + RequireAdmin. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Build admin panel UI for managing vacancies and updates/posts, including image upload/removal for posts.",
-      "acceptanceCriteria": [
-        "Admin panel has CRUD UI for Vacancies and Posts/Updates.",
-        "Admin can upload/add an image for a post (with a clear size/type limit) and delete images that are no longer needed.",
-        "Admin changes are reflected immediately in user-facing pages after refresh (and via refetch)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/admin/AdminLayout.tsx",
-          "operation": "create",
-          "description": "Create admin panel shell layout with navigation between Vacancies and Posts management sections, consistent with overall theme. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/admin/VacanciesAdminPage.tsx",
-          "operation": "create",
-          "description": "Create admin CRUD UI for job vacancies using backend createJobVacancy(), updateJobVacancy(), deleteJobVacancy(), and list via getJobVacancies(). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/admin/PostsAdminPage.tsx",
-          "operation": "create",
-          "description": "Create admin CRUD UI for posts using backend createPost(), updatePost(), deletePost(), and list via getPosts(); include image upload using blob-storage ExternalBlob with size/type limits. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/admin/PostEditor.tsx",
-          "operation": "create",
-          "description": "Create a reusable post editor form (title/content/image upload/remove) using blob-storage ExternalBlob for uploads and ExternalBlob.getDirectURL() for previews. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/admin/VacancyEditor.tsx",
-          "operation": "create",
-          "description": "Create a reusable vacancy editor form (title/description/salaryRange/requirements list) for create/edit flows. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/queries/useAdminMutations.ts",
-          "operation": "create",
-          "description": "Create React Query mutations for admin CRUD (vacancies/posts) with appropriate cache invalidation/refetch for jobs, posts, and related views. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wire admin layout and sub-routes (Vacancies, Posts) and ensure RequireAdmin guard is applied. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Apply a consistent Tailwind-based visual theme matching screenshots across Landing, Dashboard, and Admin pages.",
-      "acceptanceCriteria": [
-        "All main views (Landing, Dashboard tabs, Admin panel) share consistent card styling, spacing, and blue-accent UI.",
-        "No default/unstyled placeholder UI remains in primary flows."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "create",
-          "description": "Add Tailwind base layers and define global CSS variables/utilities to achieve screenshot-like theme (light neutral background, soft shadows, blue accents, rounded cards) across the app."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Adjust Tailwind theme extension (colors/radius/shadows if needed) to support the screenshot-like card and accent styling consistently across pages."
-        },
-        {
-          "path": "frontend/src/components/site/AppShell.tsx",
-          "operation": "create",
-          "description": "Create an app shell wrapper applying consistent page background, centered container, and spacing used by Landing/Dashboard/Admin. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wrap all routes with AppShell and ensure consistent layout/styling across Landing, Dashboard, and Admin views. Verify the component's usage instructions before implementing."
+          "description": "Adjust the send message flow as needed so non-admin users can still send messages without manual recipient entry, while admin sends use the selected recipient principal. Keep behavior for inbox/sent fetching unchanged."
         }
       ]
     }

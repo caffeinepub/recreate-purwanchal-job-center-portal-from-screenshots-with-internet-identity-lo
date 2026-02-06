@@ -90,7 +90,15 @@ export default function DashboardLayout() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-red-600 shrink-0" />
-                <span className="text-red-700 font-medium">9804968758 | 9814965177</span>
+                <span className="text-red-700 font-medium">
+                  <a href="tel:9804968758" className="hover:underline">
+                    9804968758
+                  </a>{' '}
+                  |{' '}
+                  <a href="tel:9814965177" className="hover:underline">
+                    9814965177
+                  </a>
+                </span>
               </div>
               <div className="hidden sm:block w-px h-4 bg-red-200"></div>
               <div className="flex items-center gap-2">
@@ -118,7 +126,7 @@ export default function DashboardLayout() {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-gray-700">Share now:</span>
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/profile.php?id=61575264476230"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
@@ -134,7 +142,7 @@ export default function DashboardLayout() {
                   <SiX className="w-4 h-4 text-white" />
                 </a>
                 <a
-                  href="https://wa.me"
+                  href="https://wa.me/9804968758"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 bg-green-500 rounded-lg flex items-center justify-center hover:bg-green-600 transition-colors"
@@ -193,7 +201,15 @@ export default function DashboardLayout() {
               <div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Phone className="w-4 h-4 text-red-600" />
-                  <span className="text-red-700 font-medium">9804968758 | 9814965177</span>
+                  <span className="text-red-700 font-medium">
+                    <a href="tel:9804968758" className="hover:underline">
+                      9804968758
+                    </a>{' '}
+                    |{' '}
+                    <a href="tel:9814965177" className="hover:underline">
+                      9814965177
+                    </a>
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
                   <MapPin className="w-4 h-4 text-red-600" />
@@ -209,7 +225,7 @@ export default function DashboardLayout() {
               <div className="flex items-center justify-center md:justify-end gap-1">
                 <span className="text-sm text-gray-600 mr-2">Share:</span>
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/profile.php?id=61575264476230"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
@@ -225,7 +241,7 @@ export default function DashboardLayout() {
                   <SiX className="w-4 h-4 text-white" />
                 </a>
                 <a
-                  href="https://wa.me"
+                  href="https://wa.me/9804968758"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"

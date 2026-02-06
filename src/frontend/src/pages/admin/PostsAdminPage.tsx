@@ -7,15 +7,16 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2, FileText, Upload, X } from 'lucide-react';
+import { Plus, Edit, Trash2, FileText, Upload, X, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Post } from '../../backend';
 import { ExternalBlob } from '../../backend';
 
 export default function PostsAdminPage() {
   const { data: posts, isLoading } = useGetPosts();
-  const { mutate: createPost, isPending: creating } = useCreatePost();
-  const { mutate: updatePost, isPending: updating } = useUpdatePost();
-  const { mutate: deletePost } = useDeletePost();
+  const { mutate: createPost, isPending: creating, error: createError } = useCreatePost();
+  const { mutate: updatePost, isPending: updating, error: updateError } = useUpdatePost();
+  const { mutate: deletePost, error: deleteError } = useDeletePost();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);
@@ -25,6 +26,8 @@ export default function PostsAdminPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [removeImage, setRemoveImage] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  const mutationError = createError || updateError || deleteError;
 
   const resetForm = () => {
     setTitle('');
@@ -113,6 +116,15 @@ export default function PostsAdminPage() {
           Add Post
         </Button>
       </div>
+
+      {mutationError && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {mutationError instanceof Error ? mutationError.message : 'An error occurred. Please try again.'}
+          </AlertDescription>
+        </Alert>
+      )}
 
       {isLoading ? (
         <div className="text-center py-12">

@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useGetInbox, useGetSentMessages, useSendMessage } from '../../hooks/queries/useMessages';
 import { useGetCallerRole } from '../../hooks/queries/useCallerRole';
+import { useAuthorizedUserSearch } from '../../hooks/queries/useAuthorizedUserSearch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MessageSquare, Send, Inbox, Mail } from 'lucide-react';
+import { MessageSquare, Send, Inbox, Mail, Search, User } from 'lucide-react';
 import { Principal } from '@dfinity/principal';
+import type { SearchableUserProfile } from '../../backend';
 
 export default function MessagesPage() {
   const { data: inbox, isLoading: inboxLoading } = useGetInbox();
@@ -17,27 +19,35 @@ export default function MessagesPage() {
   const { mutate: sendMessage, isPending } = useSendMessage();
 
   const [messageContent, setMessageContent] = useState('');
-  const [receiverPrincipal, setReceiverPrincipal] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRecipient, setSelectedRecipient] = useState<SearchableUserProfile | null>(null);
 
   const isAdmin = role === 'admin';
+
+  const { data: searchResults, isLoading: searchLoading } = useAuthorizedUserSearch(
+    isAdmin && searchTerm.length > 0 ? searchTerm : null
+  );
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
 
-    let receiver: Principal;
-    try {
-      receiver = Principal.fromText(receiverPrincipal);
-    } catch {
-      alert('Invalid principal ID');
+    if (!isAdmin) {
+      alert('Only admins can send messages');
+      return;
+    }
+
+    if (!selectedRecipient) {
+      alert('Please select a recipient');
       return;
     }
 
     sendMessage(
-      { receiver, content: messageContent },
+      { receiver: selectedRecipient.principal, content: messageContent },
       {
         onSuccess: () => {
           setMessageContent('');
-          setReceiverPrincipal('');
+          setSearchTerm('');
+          setSelectedRecipient(null);
         },
       }
     );
@@ -45,7 +55,13 @@ export default function MessagesPage() {
 
   const formatDate = (timestamp: bigint) => {
     const date = new Date(Number(timestamp) / 1000000);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   };
 
   return (
@@ -148,14 +164,72 @@ export default function MessagesPage() {
               <form onSubmit={handleSend} className="space-y-4">
                 {isAdmin && (
                   <div className="space-y-2">
-                    <Label htmlFor="receiver">Receiver Principal *</Label>
-                    <Input
-                      id="receiver"
-                      value={receiverPrincipal}
-                      onChange={(e) => setReceiverPrincipal(e.target.value)}
-                      required
-                      placeholder="Enter principal ID"
-                    />
+                    <Label htmlFor="recipient">Recipient *</Label>
+                    {selectedRecipient ? (
+                      <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div className="flex items-center gap-2">
+                          <User className="w-4 h-4 text-blue-600" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-800">
+                              {selectedRecipient.firstName} {selectedRecipient.lastName}
+                            </p>
+                            <p className="text-xs text-gray-600">{selectedRecipient.email}</p>
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedRecipient(null);
+                            setSearchTerm('');
+                          }}
+                        >
+                          Change
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <Input
+                            id="recipient"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder="Search by name..."
+                            className="pl-10"
+                          />
+                        </div>
+                        {searchTerm.length > 0 && (
+                          <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
+                            {searchLoading ? (
+                              <div className="p-4 text-center text-sm text-gray-600">Searching...</div>
+                            ) : !searchResults || searchResults.length === 0 ? (
+                              <div className="p-4 text-center text-sm text-gray-600">No users found</div>
+                            ) : (
+                              <div className="divide-y">
+                                {searchResults.map((user) => (
+                                  <button
+                                    key={user.principal.toString()}
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedRecipient(user);
+                                      setSearchTerm('');
+                                    }}
+                                    className="w-full p-3 text-left hover:bg-gray-50 transition-colors"
+                                  >
+                                    <p className="text-sm font-medium text-gray-800">
+                                      {user.firstName} {user.lastName}
+                                    </p>
+                                    <p className="text-xs text-gray-600">{user.email}</p>
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 )}
 
@@ -172,7 +246,11 @@ export default function MessagesPage() {
                   />
                 </div>
 
-                <Button type="submit" disabled={isPending} className="w-full bg-blue-600 hover:bg-blue-700 gap-2">
+                <Button
+                  type="submit"
+                  disabled={isPending || (isAdmin && !selectedRecipient)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 gap-2"
+                >
                   <Send className="w-4 h-4" />
                   {isPending ? 'Sending...' : 'Send Message'}
                 </Button>

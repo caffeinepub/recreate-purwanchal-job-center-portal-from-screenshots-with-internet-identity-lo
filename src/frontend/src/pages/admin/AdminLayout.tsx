@@ -1,29 +1,16 @@
 import { Outlet, useNavigate, useLocation } from '@tanstack/react-router';
-import { useInternetIdentity } from '../../hooks/useInternetIdentity';
-import { useGetCallerRole } from '../../hooks/queries/useCallerRole';
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { LogOut, Briefcase, FileText, Shield } from 'lucide-react';
-import AccessDeniedScreen from '../../components/auth/AccessDeniedScreen';
+import { LogOut, Briefcase, FileText, Shield, Lock } from 'lucide-react';
+import { useAdminPassword } from '../../hooks/useAdminPassword';
+import AdminPasswordGate from '../../components/admin/AdminPasswordGate';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { identity, clear } = useInternetIdentity();
-  const { data: role, isLoading: roleLoading } = useGetCallerRole();
-  const queryClient = useQueryClient();
+  const { isUnlocked, unlock, lock } = useAdminPassword();
 
-  useEffect(() => {
-    if (!identity) {
-      navigate({ to: '/' });
-    }
-  }, [identity, navigate]);
-
-  const handleLogout = async () => {
-    await clear();
-    queryClient.clear();
-    navigate({ to: '/' });
+  const handleLock = () => {
+    lock();
   };
 
   const tabs = [
@@ -38,19 +25,8 @@ export default function AdminLayout() {
     return location.pathname.startsWith(path);
   };
 
-  if (roleLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (role !== 'admin') {
-    return <AccessDeniedScreen />;
+  if (!isUnlocked) {
+    return <AdminPasswordGate onUnlock={unlock} />;
   }
 
   return (
@@ -70,9 +46,9 @@ export default function AdminLayout() {
               </div>
             </div>
 
-            <Button onClick={handleLogout} variant="outline" size="sm" className="gap-2">
-              <LogOut className="w-4 h-4" />
-              Logout
+            <Button onClick={handleLock} variant="outline" size="sm" className="gap-2">
+              <Lock className="w-4 h-4" />
+              Lock Admin
             </Button>
           </div>
         </div>

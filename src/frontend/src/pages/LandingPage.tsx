@@ -35,12 +35,8 @@ export default function LandingPage() {
     }
   };
 
-  const handleAdminLogin = async () => {
-    try {
-      await login();
-    } catch (error: any) {
-      console.error('Admin login error:', error);
-    }
+  const handleAdminLogin = () => {
+    navigate({ to: '/admin' });
   };
 
   return (
@@ -67,8 +63,16 @@ export default function LandingPage() {
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-red-600 shrink-0" />
                 <div className="text-red-700 font-semibold">
-                  <div>9804968758</div>
-                  <div>9814965177</div>
+                  <div>
+                    <a href="tel:9804968758" className="hover:underline">
+                      9804968758
+                    </a>
+                  </div>
+                  <div>
+                    <a href="tel:9814965177" className="hover:underline">
+                      9814965177
+                    </a>
+                  </div>
                 </div>
               </div>
               <div className="hidden md:block w-px h-12 bg-red-200"></div>
@@ -146,7 +150,6 @@ export default function LandingPage() {
 
             <Button
               onClick={handleAdminLogin}
-              disabled={isLoggingIn}
               variant="outline"
               className="w-full border-2 border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-6 rounded-xl transition-all"
             >
@@ -169,7 +172,15 @@ export default function LandingPage() {
               <div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Phone className="w-4 h-4 text-red-600" />
-                  <span className="text-red-700 font-medium">9804968758 | 9814965177</span>
+                  <span className="text-red-700 font-medium">
+                    <a href="tel:9804968758" className="hover:underline">
+                      9804968758
+                    </a>{' '}
+                    |{' '}
+                    <a href="tel:9814965177" className="hover:underline">
+                      9814965177
+                    </a>
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
                   <MapPin className="w-4 h-4 text-red-600" />
@@ -193,7 +204,7 @@ export default function LandingPage() {
               <div className="flex items-center justify-center md:justify-end gap-1">
                 <span className="text-sm text-gray-600 mr-2">Share:</span>
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/profile.php?id=61575264476230"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
@@ -209,7 +220,7 @@ export default function LandingPage() {
                   <SiX className="w-4 h-4 text-white" />
                 </a>
                 <a
-                  href="https://wa.me"
+                  href="https://wa.me/9804968758"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"

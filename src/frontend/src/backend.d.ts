@@ -32,6 +32,12 @@ export interface JobVacancy {
     salaryRange: string;
     requirements: Array<string>;
 }
+export interface SearchableUserProfile {
+    principal: Principal;
+    email: string;
+    lastName: string;
+    firstName: string;
+}
 export interface Post {
     id: bigint;
     title: string;
@@ -67,10 +73,11 @@ export enum UserRole {
 export interface backendInterface {
     applyForJob(jobId: bigint, coverLetter: string, resume: ExternalBlob | null): Promise<bigint>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createJobVacancy(vacancy: JobVacancy): Promise<bigint>;
-    createPost(title: string, content: string, image: ExternalBlob | null): Promise<bigint>;
-    deleteJobVacancy(jobId: bigint): Promise<void>;
-    deletePost(postId: bigint): Promise<void>;
+    authorizedUserSearch(_adminPassword: string, searchTerm: string | null): Promise<Array<SearchableUserProfile>>;
+    createJobVacancy(vacancy: JobVacancy, _adminPassword: string): Promise<bigint>;
+    createPost(title: string, content: string, image: ExternalBlob | null, _adminPassword: string): Promise<bigint>;
+    deleteJobVacancy(jobId: bigint, _adminPassword: string): Promise<void>;
+    deletePost(postId: bigint, _adminPassword: string): Promise<void>;
     getAllApplications(): Promise<Array<Application>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
@@ -86,6 +93,6 @@ export interface backendInterface {
     searchJobVacancies(searchTerm: string | null): Promise<Array<JobVacancy>>;
     sendMessage(receiver: Principal, content: string): Promise<bigint>;
     updateApplicationStatus(appId: bigint, status: ApplicationStatus): Promise<void>;
-    updateJobVacancy(jobId: bigint, vacancy: JobVacancy): Promise<void>;
-    updatePost(postId: bigint, title: string, content: string, image: ExternalBlob | null): Promise<void>;
+    updateJobVacancy(jobId: bigint, vacancy: JobVacancy, _adminPassword: string): Promise<void>;
+    updatePost(postId: bigint, title: string, content: string, image: ExternalBlob | null, _adminPassword: string): Promise<void>;
 }

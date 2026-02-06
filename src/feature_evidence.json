@@ -2,11 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-recreate-the-public-landing-page-and-overall-layout-to-match-the-provided-screenshots-header-with-logo-site-name-subtitle-contact-info-strip-three-feature-cards-and-a-centered-login-get-started-card-keeping-the-same-visual-theme-light-background-soft-card-shadows-blue-accents-rounded-containers",
-      "featureTitle": "Recreate the public landing page and overall layout to match the provided screenshots (header with logo + site name/subtitle, contact info strip, three feature cards, and a centered login/get-started card), keeping the same visual theme (light background, soft card shadows, blue accents, rounded containers).",
+      "featureId": "feature-replace-the-placeholder-facebook-and-whatsapp-share-links-with-the-exact-user-provided-destinations-throughout-the-ui-facebook-must-open-https-www-facebook-com-profile-php-id-61575264476230-whatsapp-must-open-a-chat-to-9804968758-use-a-wa-me-link-that-works-in-mobile-desktop-update-every-place-the-app-currently-links-to-https-facebook-com-and-https-wa-me-e-g-landing-page-footer-and-dashboard-share-card-footer",
+      "featureTitle": "Replace the placeholder Facebook and WhatsApp share links with the exact user-provided destinations throughout the UI.\n- Facebook must open: https://www.facebook.com/profile.php?id=61575264476230\n- WhatsApp must open a chat to: 9804968758 (use a wa.me link that works in mobile/desktop)\nUpdate every place the app currently links to https://facebook.com and https://wa.me (e.g., Landing page footer and Dashboard share card/footer).",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/LandingPage.tsx"
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/src/pages/dashboard/DashboardLayout.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -23,10 +23,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-static-asset-handling-for-the-uploaded-logo-and-use-it-in-the-header-hero-as-shown-in-the-screenshots",
-      "featureTitle": "Add static asset handling for the uploaded logo and use it in the header/hero as shown in the screenshots.",
+      "featureId": "feature-make-the-displayed-phone-number-s-tappable-to-open-the-device-dialer-wherever-the-phone-numbers-are-shown-landing-page-contact-strip-dashboard-header-contact-strip-dashboard-footer-landing-footer-render-them-as-tel-links-ensure-at-least-9804968758-is-tappable-via-tel-9804968758-and-apply-the-same-behavior-to-the-other-displayed-number-as-well",
+      "featureTitle": "Make the displayed phone number(s) tappable to open the device dialer.\n- Wherever the phone numbers are shown (Landing page contact strip, Dashboard header contact strip, Dashboard footer, Landing footer), render them as tel: links.\n- Ensure at least 9804968758 is tappable via tel:9804968758 (and apply the same behavior to the other displayed number as well).",
       "files": [
-        "frontend/src/pages/LandingPage.tsx"
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/src/pages/dashboard/DashboardLayout.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -43,11 +44,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-working-authentication-using-internet-identity-for-regular-users-job-seekers-including-login-and-logout-flows-from-the-ui-elements-shown-sign-in-with-internet-identity-logout",
-      "featureTitle": "Implement working authentication using Internet Identity for regular users (job seekers) including login and logout flows from the UI elements shown (Sign In with Internet Identity, Logout).",
+      "featureId": "feature-ensure-the-provided-logo-is-actually-present-as-a-static-asset-and-used-consistently-in-all-existing-header-hero-footer-locations-where-the-app-currently-references-assets-logo-job-jpg-add-replace-the-logo-file-at-frontend-public-assets-logo-job-jpg-so-it-is-included-in-the-deployed-build-keep-the-existing-img-src-assets-logo-job-jpg-usages-working-landing-page-hero-landing-footer-dashboard-header-footer-admin-header",
+      "featureTitle": "Ensure the provided logo is actually present as a static asset and used consistently in all existing header/hero/footer locations where the app currently references /assets/logo-job.jpg.\n- Add/replace the logo file at frontend/public/assets/logo-job.jpg so it is included in the deployed build.\n- Keep the existing <img src=\"/assets/logo-job.jpg\" ... /> usages working (Landing page hero, Landing footer, Dashboard header/footer, Admin header).",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/queries/useCallerRole.ts"
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/src/pages/admin/AdminLayout.tsx",
+        "frontend/src/pages/dashboard/DashboardLayout.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -64,13 +66,13 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-and-persist-a-per-user-profile-record-keyed-by-the-authenticated-principal-on-first-login-require-the-user-to-complete-an-onboarding-flow-to-enter-their-personal-details-before-accessing-the-main-dashboard",
-      "featureTitle": "Create and persist a per-user profile record keyed by the authenticated Principal; on first login, require the user to complete an onboarding flow to enter their personal details before accessing the main dashboard.",
+      "featureId": "feature-change-admin-access-to-be-password-only-using-the-exact-password-rewan10-with-no-internet-identity-requirement-and-lock-the-entire-admin-panel-behind-this-password-add-an-admin-password-gate-ux-for-admin-routes-if-the-correct-password-has-not-been-entered-in-the-current-session-show-a-password-prompt-instead-of-the-admin-ui-store-the-unlocked-state-in-session-storage-or-equivalent-so-refreshes-keep-the-admin-unlocked-for-the-current-browser-session-remove-the-current-internet-identity-dependency-for-accessing-adminlayout-do-not-require-identity-to-view-admin-when-the-password-gate-is-satisfied-keep-all-user-facing-text-in-english",
+      "featureTitle": "Change admin access to be password-only using the exact password \"@rewan10\" with no Internet Identity requirement, and lock the entire admin panel behind this password.\n- Add an admin password gate UX for /admin routes: if the correct password has not been entered in the current session, show a password prompt instead of the admin UI.\n- Store the unlocked state in session storage (or equivalent) so refreshes keep the admin unlocked for the current browser session.\n- Remove the current Internet Identity dependency for accessing AdminLayout (do not require identity to view /admin when the password gate is satisfied).\n- Keep all user-facing text in English.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/queries/useCallerUserProfile.ts",
-        "frontend/src/pages/OnboardingPage.tsx",
-        "frontend/src/pages/dashboard/ProfilePage.tsx"
+        "frontend/src/components/admin/AdminPasswordGate.tsx",
+        "frontend/src/hooks/useAdminPassword.ts",
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/src/pages/admin/AdminLayout.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -87,40 +89,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-the-authenticated-user-dashboard-navigation-and-pages-shown-in-the-screenshots-browse-jobs-my-applications-messages-updates-and-profile",
-      "featureTitle": "Implement the authenticated user dashboard navigation and pages shown in the screenshots: Browse Jobs, My Applications, Messages, Updates, and Profile.",
+      "featureId": "feature-wire-the-admin-frontend-to-use-the-password-authorized-backend-methods-update-react-query-admin-mutation-hooks-frontend-src-hooks-queries-useadminmutations-ts-and-any-admin-pages-that-call-them-to-include-the-admin-password-when-calling-the-backend-ensure-the-password-is-sourced-from-the-same-session-stored-value-used-by-the-admin-password-gate-if-the-backend-rejects-due-to-missing-invalid-password-show-a-clear-english-error-and-return-the-user-to-the-password-prompt-state",
+      "featureTitle": "Wire the admin frontend to use the password-authorized backend methods.\n- Update React Query admin mutation hooks (frontend/src/hooks/queries/useAdminMutations.ts) and any admin pages that call them to include the admin password when calling the backend.\n- Ensure the password is sourced from the same session-stored value used by the admin password gate.\n- If the backend rejects due to missing/invalid password, show a clear English error and return the user to the password prompt state.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/dashboard/BrowseJobsPage.tsx",
-        "frontend/src/pages/dashboard/DashboardLayout.tsx",
-        "frontend/src/pages/dashboard/MessagesPage.tsx",
-        "frontend/src/pages/dashboard/MyApplicationsPage.tsx",
-        "frontend/src/pages/dashboard/UpdatesPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-job-vacancy-data-model-and-user-facing-browse-jobs-experience-including-search-listing-vacancy-detail-view-and-the-ability-for-a-user-to-apply-for-a-job-and-see-their-applications-in-my-applications",
-      "featureTitle": "Implement job vacancy data model and user-facing Browse Jobs experience including search, listing, vacancy detail view, and the ability for a user to apply for a job and see their applications in My Applications.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/queries/useApplications.ts",
-        "frontend/src/hooks/queries/useJobs.ts",
-        "frontend/src/pages/dashboard/BrowseJobsPage.tsx",
-        "frontend/src/pages/dashboard/JobDetailPage.tsx",
-        "frontend/src/pages/dashboard/MyApplicationsPage.tsx"
+        "frontend/src/hooks/queries/useAdminMutations.ts",
+        "frontend/src/pages/admin/PostsAdminPage.tsx",
+        "frontend/src/pages/admin/VacanciesAdminPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -137,31 +111,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-an-updates-posts-feature-visible-to-users-updates-tab-where-admins-can-publish-posts-announcements-and-users-can-view-a-chronological-list",
-      "featureTitle": "Implement an Updates/Posts feature visible to users (Updates tab) where admins can publish posts/announcements and users can view a chronological list.",
+      "featureId": "feature-replace-the-admin-only-principal-id-receiver-input-with-a-name-based-person-search-and-selection-in-the-message-compose-area-shown-to-admins-remove-the-freeform-principal-id-field-provide-a-search-input-that-filters-people-by-name-first-name-last-name-and-allows-selecting-a-person-the-selection-determines-the-receiver-principal-the-ui-must-display-the-selected-person-s-full-name-and-may-optionally-show-a-shortened-principal-for-disambiguation-keep-all-user-facing-text-in-english",
+      "featureTitle": "Replace the admin-only Principal ID receiver input with a name-based person search and selection.\n- In the message compose area shown to admins, remove the freeform Principal ID field.\n- Provide a search input that filters people by name (first name + last name) and allows selecting a person; the selection determines the receiver principal.\n- The UI must display the selected person’s full name (and may optionally show a shortened principal for disambiguation).\n- Keep all user-facing text in English.",
       "files": [
-        "frontend/src/hooks/queries/usePosts.ts",
-        "frontend/src/pages/dashboard/UpdatesPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-an-in-app-messages-feature-messages-tab-supporting-at-minimum-admin-to-user-messaging-broadcast-or-per-user-and-user-to-admin-messages-with-a-simple-inbox-thread-list-ui",
-      "featureTitle": "Implement an in-app Messages feature (Messages tab) supporting at minimum admin-to-user messaging (broadcast or per-user) and user-to-admin messages, with a simple inbox thread/list UI.",
-      "files": [
-        "frontend/src/hooks/queries/useMessages.ts",
+        "frontend/src/hooks/queries/useAuthorizedUserSearch.ts",
         "frontend/src/pages/dashboard/MessagesPage.tsx"
       ],
       "components": [
@@ -174,74 +127,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-an-admin-authentication-authorization-path-admin-login-and-role-based-access-control-so-admin-users-have-full-control-over-the-system-while-regular-users-cannot-access-admin-features",
-      "featureTitle": "Implement an admin authentication/authorization path (“Admin Login”) and role-based access control so admin users have full control over the system while regular users cannot access admin features.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/auth/AccessDeniedScreen.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-build-an-admin-panel-that-allows-admins-to-create-edit-and-delete-vacancies-create-edit-and-delete-posts-updates-and-add-delete-manage-pictures-used-in-posts-updates-or-site-content",
-      "featureTitle": "Build an admin panel that allows admins to create, edit, and delete vacancies; create, edit, and delete posts/updates; and add/delete/manage pictures used in posts/updates or site content.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/queries/useAdminMutations.ts",
-        "frontend/src/pages/admin/AdminLayout.tsx",
-        "frontend/src/pages/admin/PostsAdminPage.tsx",
-        "frontend/src/pages/admin/VacanciesAdminPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-10"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-coherent-visual-theme-matching-the-screenshots-across-all-pages-typography-spacing-card-style-buttons-neutral-backgrounds-with-blue-accents-and-apply-it-consistently-using-tailwind",
-      "featureTitle": "Create a coherent visual theme matching the screenshots across all pages (typography, spacing, card style, buttons, neutral backgrounds with blue accents) and apply it consistently using Tailwind.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-11"
+        "REQ-7"
       ],
       "confidence": "high"
     }

@@ -1,19 +1,16 @@
 # Specification
 
 ## Summary
-**Goal:** Recreate the Purwanchal Job Center portal UI from the provided screenshots and make it fully functional with Internet Identity authentication, per-user onboarding/profiles, user dashboard features, and an admin CMS.
+**Goal:** Fix social/contact branding links and switch the admin area to password-only access, including password-authorized admin backend operations and name-based recipient search.
 
 **Planned changes:**
-- Recreate the public landing page layout/theme from screenshots (header with logo/title/subtitle, contact info strip, three feature cards, and centered Get Started login card) with responsive behavior.
-- Add static asset handling for the uploaded logo and render it in the header/hero in a contained/circular style.
-- Implement Internet Identity login/logout for regular users and route protection for authenticated areas.
-- Create per-user profile persistence keyed by Principal; enforce first-login onboarding to collect required details; allow profile view/edit afterward.
-- Build authenticated user dashboard with tabbed navigation and routes: Browse Jobs, My Applications, Messages, Updates, Profile, including empty states.
-- Implement jobs data model and UX: list + search, job detail view, apply flow, and per-user applications list.
-- Implement Updates/Posts feature: admins publish posts (optional image) and users view newest-first list.
-- Implement Messages feature: user-to-admin and admin-to-user (broadcast or per-user) messaging with simple inbox/history UI and backend access enforcement.
-- Implement admin login entry point and role-based access control via an admin allowlist; block non-admin access to admin routes/methods.
-- Build admin panel CMS for CRUD on vacancies and posts/updates, plus image upload/manage for posts/site content.
-- Apply a consistent Tailwind theme across landing, dashboard, and admin to match the screenshots (light background, soft shadows, blue accents, rounded cards).
+- Replace all placeholder Facebook and WhatsApp links across the UI with the provided Facebook profile URL and a working wa.me chat link for 9804968758.
+- Render displayed phone numbers as tappable `tel:` links wherever they appear without changing layout/styling.
+- Ensure the logo is present as a static asset at `frontend/public/assets/logo-job.jpg` so all existing `/assets/logo-job.jpg` references render correctly (landing, dashboard, admin).
+- Add a password gate for all `/admin` routes using password `@rewan10`, storing unlocked state in session storage, and remove the Internet Identity requirement for viewing admin when unlocked.
+- Update backend admin CRUD methods (jobs/posts) to require the admin password and reject otherwise, keeping logic in `backend/main.mo`.
+- Wire admin frontend mutations to pass the session-stored password to the password-authorized backend methods; on invalid/missing password, show an English error and return to the password prompt state.
+- Replace the admin recipient Principal ID input with a name-based user search + selection UI that sets the receiver principal while displaying the selected person’s name.
+- Add a password-protected backend query to list/search user profiles (principal + name fields) for the admin recipient picker, supporting case-insensitive name filtering.
 
-**User-visible outcome:** Users can visit a landing page matching the screenshots, sign in with Internet Identity, complete first-time onboarding, browse/apply to jobs, view their applications, read updates, message admins, and manage their profile; admins can log in to an admin panel to manage jobs, posts, images, and messaging with proper access control.
+**User-visible outcome:** Facebook/WhatsApp buttons and phone numbers open the correct destinations, the logo displays everywhere it’s referenced, and the admin panel is accessible only after entering `@rewan10`—with admin CRUD working via password authorization and admin messaging selecting recipients by name instead of pasting a Principal ID.

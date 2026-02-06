@@ -11,14 +11,15 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2, Briefcase } from 'lucide-react';
+import { Plus, Edit, Trash2, Briefcase, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { JobVacancy } from '../../backend';
 
 export default function VacanciesAdminPage() {
   const { data: jobs, isLoading } = useGetJobVacancies();
-  const { mutate: createJob, isPending: creating } = useCreateJobVacancy();
-  const { mutate: updateJob, isPending: updating } = useUpdateJobVacancy();
-  const { mutate: deleteJob } = useDeleteJobVacancy();
+  const { mutate: createJob, isPending: creating, error: createError } = useCreateJobVacancy();
+  const { mutate: updateJob, isPending: updating, error: updateError } = useUpdateJobVacancy();
+  const { mutate: deleteJob, error: deleteError } = useDeleteJobVacancy();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<JobVacancy | null>(null);
@@ -27,6 +28,8 @@ export default function VacanciesAdminPage() {
   const [description, setDescription] = useState('');
   const [salaryRange, setSalaryRange] = useState('');
   const [requirements, setRequirements] = useState('');
+
+  const mutationError = createError || updateError || deleteError;
 
   const resetForm = () => {
     setTitle('');
@@ -112,6 +115,15 @@ export default function VacanciesAdminPage() {
           Add Vacancy
         </Button>
       </div>
+
+      {mutationError && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {mutationError instanceof Error ? mutationError.message : 'An error occurred. Please try again.'}
+          </AlertDescription>
+        </Alert>
+      )}
 
       {isLoading ? (
         <div className="text-center py-12">

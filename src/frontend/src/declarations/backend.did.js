@@ -25,6 +25,12 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const SearchableUserProfile = IDL.Record({
+  'principal' : IDL.Principal,
+  'email' : IDL.Text,
+  'lastName' : IDL.Text,
+  'firstName' : IDL.Text,
+});
 export const Time = IDL.Int;
 export const JobVacancy = IDL.Record({
   'id' : IDL.Nat,
@@ -105,14 +111,19 @@ export const idlService = IDL.Service({
       [],
     ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'createJobVacancy' : IDL.Func([JobVacancy], [IDL.Nat], []),
+  'authorizedUserSearch' : IDL.Func(
+      [IDL.Text, IDL.Opt(IDL.Text)],
+      [IDL.Vec(SearchableUserProfile)],
+      ['query'],
+    ),
+  'createJobVacancy' : IDL.Func([JobVacancy, IDL.Text], [IDL.Nat], []),
   'createPost' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob)],
+      [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Text],
       [IDL.Nat],
       [],
     ),
-  'deleteJobVacancy' : IDL.Func([IDL.Nat], [], []),
-  'deletePost' : IDL.Func([IDL.Nat], [], []),
+  'deleteJobVacancy' : IDL.Func([IDL.Nat, IDL.Text], [], []),
+  'deletePost' : IDL.Func([IDL.Nat, IDL.Text], [], []),
   'getAllApplications' : IDL.Func([], [IDL.Vec(Application)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -136,9 +147,9 @@ export const idlService = IDL.Service({
     ),
   'sendMessage' : IDL.Func([IDL.Principal, IDL.Text], [IDL.Nat], []),
   'updateApplicationStatus' : IDL.Func([IDL.Nat, ApplicationStatus], [], []),
-  'updateJobVacancy' : IDL.Func([IDL.Nat, JobVacancy], [], []),
+  'updateJobVacancy' : IDL.Func([IDL.Nat, JobVacancy, IDL.Text], [], []),
   'updatePost' : IDL.Func(
-      [IDL.Nat, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob)],
+      [IDL.Nat, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Text],
       [],
       [],
     ),
@@ -163,6 +174,12 @@ export const idlFactory = ({ IDL }) => {
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
+  });
+  const SearchableUserProfile = IDL.Record({
+    'principal' : IDL.Principal,
+    'email' : IDL.Text,
+    'lastName' : IDL.Text,
+    'firstName' : IDL.Text,
   });
   const Time = IDL.Int;
   const JobVacancy = IDL.Record({
@@ -244,14 +261,19 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'createJobVacancy' : IDL.Func([JobVacancy], [IDL.Nat], []),
+    'authorizedUserSearch' : IDL.Func(
+        [IDL.Text, IDL.Opt(IDL.Text)],
+        [IDL.Vec(SearchableUserProfile)],
+        ['query'],
+      ),
+    'createJobVacancy' : IDL.Func([JobVacancy, IDL.Text], [IDL.Nat], []),
     'createPost' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob)],
+        [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Text],
         [IDL.Nat],
         [],
       ),
-    'deleteJobVacancy' : IDL.Func([IDL.Nat], [], []),
-    'deletePost' : IDL.Func([IDL.Nat], [], []),
+    'deleteJobVacancy' : IDL.Func([IDL.Nat, IDL.Text], [], []),
+    'deletePost' : IDL.Func([IDL.Nat, IDL.Text], [], []),
     'getAllApplications' : IDL.Func([], [IDL.Vec(Application)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -275,9 +297,9 @@ export const idlFactory = ({ IDL }) => {
       ),
     'sendMessage' : IDL.Func([IDL.Principal, IDL.Text], [IDL.Nat], []),
     'updateApplicationStatus' : IDL.Func([IDL.Nat, ApplicationStatus], [], []),
-    'updateJobVacancy' : IDL.Func([IDL.Nat, JobVacancy], [], []),
+    'updateJobVacancy' : IDL.Func([IDL.Nat, JobVacancy, IDL.Text], [], []),
     'updatePost' : IDL.Func(
-        [IDL.Nat, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob)],
+        [IDL.Nat, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Text],
         [],
         [],
       ),
