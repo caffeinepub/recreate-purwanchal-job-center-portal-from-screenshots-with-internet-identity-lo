@@ -1,29 +1,35 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T12:12:14.985Z",
-  "summary": "The diff only updates project_state.json to record pending requests; it does not replace or add the logo asset at frontend/public/assets/logo-job.jpg, so REQ-1 is not implemented.",
+  "generatedAt": "2026-02-07T11:00:22.089Z",
+  "summary": "The diff adds a centralized admin error formatter that detects stopped-canister replica errors (IC0508 / Reject code 5 / “is stopped”) and wires it into the admin status check/unlock flow and multiple admin CRUD mutations. The stopped-canister case now shows a short English message including canister ID gkorp-uqaaa-aaaab-qeptq-cai and avoids leaving the UI stuck in the “Checking admin access...” loading state by ensuring the check completes and the session unlock flag is cleared.",
   "missing_requirements": [
     {
-      "id": "REQ-1",
-      "requirement": "Replace the existing static logo asset so that all current <img src=\"/assets/logo-job.jpg\" ... /> usages display the newly uploaded logo image (ensure frontend/public/assets/logo-job.jpg exists and is included in the build, with no src path changes).",
-      "reason": "No asset file changes are present in the diff; only project_state.json was modified. There is no evidence that frontend/public/assets/logo-job.jpg was added/replaced or that the build will include the new image.",
+      "id": "REQ-2",
+      "requirement": "Other existing authorization errors (e.g., \"Unauthorized\" / \"Only admins\") continue to display the existing access-denied guidance and continue to lock the admin session as currently implemented.",
+      "reason": "The new centralized formatter replaces authorization-error messaging with a new generic string, but the diff does not show that it preserves the previously existing access-denied guidance text/behavior (it appears to overwrite it).",
       "evidence": [
-        "project_state.json"
+        "frontend/src/utils/adminErrorFormatting.ts"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Introduced/updated project tracking entries (AR-1, AR-2) marking the logo replacement request(s) as pending.",
-      "reason": "The BuildRequest asked to replace the logo asset; it did not request adding project management metadata or new_feature_requests entries.",
+      "description": "Treating errors containing the substring \"trap\" as authorization errors in centralized admin error formatting.",
+      "reason": "The BuildRequest only called out \"Unauthorized\" / \"Only admins\" as authorization error examples; adding \"trap\" as an authorization classifier is additional behavior not requested.",
       "evidence": [
-        "project_state.json"
+        "frontend/src/utils/adminErrorFormatting.ts"
       ]
     }
   ],
-  "confidence": 0.82,
+  "confidence": 0.62,
   "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/admin/AdminPasswordGate.tsx",
+    "frontend/src/hooks/queries/useAdminMutations.ts",
+    "frontend/src/hooks/useAdminPassword.ts",
+    "frontend/src/pages/admin/AdminLayout.tsx",
+    "frontend/src/utils/adminErrorFormatting.ts",
     "project_state.json"
   ]
 }

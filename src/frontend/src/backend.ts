@@ -166,11 +166,11 @@ export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     applyForJob(jobId: bigint, coverLetter: string, resume: ExternalBlob | null): Promise<bigint>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    authorizedUserSearch(_adminPassword: string, searchTerm: string | null): Promise<Array<SearchableUserProfile>>;
-    createJobVacancy(vacancy: JobVacancy, _adminPassword: string): Promise<bigint>;
-    createPost(title: string, content: string, image: ExternalBlob | null, _adminPassword: string): Promise<bigint>;
-    deleteJobVacancy(jobId: bigint, _adminPassword: string): Promise<void>;
-    deletePost(postId: bigint, _adminPassword: string): Promise<void>;
+    authorizedUserSearch(searchTerm: string | null): Promise<Array<SearchableUserProfile>>;
+    createJobVacancy(vacancy: JobVacancy): Promise<bigint>;
+    createPost(title: string, content: string, image: ExternalBlob | null): Promise<bigint>;
+    deleteJobVacancy(jobId: bigint): Promise<void>;
+    deletePost(postId: bigint): Promise<void>;
     getAllApplications(): Promise<Array<Application>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
@@ -186,8 +186,8 @@ export interface backendInterface {
     searchJobVacancies(searchTerm: string | null): Promise<Array<JobVacancy>>;
     sendMessage(receiver: Principal, content: string): Promise<bigint>;
     updateApplicationStatus(appId: bigint, status: ApplicationStatus): Promise<void>;
-    updateJobVacancy(jobId: bigint, vacancy: JobVacancy, _adminPassword: string): Promise<void>;
-    updatePost(postId: bigint, title: string, content: string, image: ExternalBlob | null, _adminPassword: string): Promise<void>;
+    updateJobVacancy(jobId: bigint, vacancy: JobVacancy): Promise<void>;
+    updatePost(postId: bigint, title: string, content: string, image: ExternalBlob | null): Promise<void>;
 }
 import type { Application as _Application, ApplicationStatus as _ApplicationStatus, ExternalBlob as _ExternalBlob, Post as _Post, Time as _Time, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -318,73 +318,73 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async authorizedUserSearch(arg0: string, arg1: string | null): Promise<Array<SearchableUserProfile>> {
+    async authorizedUserSearch(arg0: string | null): Promise<Array<SearchableUserProfile>> {
         if (this.processError) {
             try {
-                const result = await this.actor.authorizedUserSearch(arg0, to_candid_opt_n12(this._uploadFile, this._downloadFile, arg1));
+                const result = await this.actor.authorizedUserSearch(to_candid_opt_n12(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.authorizedUserSearch(arg0, to_candid_opt_n12(this._uploadFile, this._downloadFile, arg1));
+            const result = await this.actor.authorizedUserSearch(to_candid_opt_n12(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
-    async createJobVacancy(arg0: JobVacancy, arg1: string): Promise<bigint> {
+    async createJobVacancy(arg0: JobVacancy): Promise<bigint> {
         if (this.processError) {
             try {
-                const result = await this.actor.createJobVacancy(arg0, arg1);
+                const result = await this.actor.createJobVacancy(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createJobVacancy(arg0, arg1);
+            const result = await this.actor.createJobVacancy(arg0);
             return result;
         }
     }
-    async createPost(arg0: string, arg1: string, arg2: ExternalBlob | null, arg3: string): Promise<bigint> {
+    async createPost(arg0: string, arg1: string, arg2: ExternalBlob | null): Promise<bigint> {
         if (this.processError) {
             try {
-                const result = await this.actor.createPost(arg0, arg1, await to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3);
+                const result = await this.actor.createPost(arg0, arg1, await to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createPost(arg0, arg1, await to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3);
+            const result = await this.actor.createPost(arg0, arg1, await to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2));
             return result;
         }
     }
-    async deleteJobVacancy(arg0: bigint, arg1: string): Promise<void> {
+    async deleteJobVacancy(arg0: bigint): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.deleteJobVacancy(arg0, arg1);
+                const result = await this.actor.deleteJobVacancy(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.deleteJobVacancy(arg0, arg1);
+            const result = await this.actor.deleteJobVacancy(arg0);
             return result;
         }
     }
-    async deletePost(arg0: bigint, arg1: string): Promise<void> {
+    async deletePost(arg0: bigint): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.deletePost(arg0, arg1);
+                const result = await this.actor.deletePost(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.deletePost(arg0, arg1);
+            const result = await this.actor.deletePost(arg0);
             return result;
         }
     }
@@ -598,31 +598,31 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async updateJobVacancy(arg0: bigint, arg1: JobVacancy, arg2: string): Promise<void> {
+    async updateJobVacancy(arg0: bigint, arg1: JobVacancy): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateJobVacancy(arg0, arg1, arg2);
+                const result = await this.actor.updateJobVacancy(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateJobVacancy(arg0, arg1, arg2);
+            const result = await this.actor.updateJobVacancy(arg0, arg1);
             return result;
         }
     }
-    async updatePost(arg0: bigint, arg1: string, arg2: string, arg3: ExternalBlob | null, arg4: string): Promise<void> {
+    async updatePost(arg0: bigint, arg1: string, arg2: string, arg3: ExternalBlob | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.updatePost(arg0, arg1, arg2, await to_candid_opt_n8(this._uploadFile, this._downloadFile, arg3), arg4);
+                const result = await this.actor.updatePost(arg0, arg1, arg2, await to_candid_opt_n8(this._uploadFile, this._downloadFile, arg3));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updatePost(arg0, arg1, arg2, await to_candid_opt_n8(this._uploadFile, this._downloadFile, arg3), arg4);
+            const result = await this.actor.updatePost(arg0, arg1, arg2, await to_candid_opt_n8(this._uploadFile, this._downloadFile, arg3));
             return result;
         }
     }

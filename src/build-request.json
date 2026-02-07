@@ -1,52 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Replace app logo with uploaded asset",
-  "priority": "normal",
+  "title": "Handle stopped backend canister during admin login (IC0508 reject code 5)",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Replace the existing static logo asset so that all current <img src=\"/assets/logo-job.jpg\" ... /> usages display the newly uploaded logo image.",
+      "text": "Update the admin login/unlock flow to gracefully handle replica rejection errors that indicate the backend canister is stopped (e.g., Reject code: 5 / Error code: IC0508) when calling the admin check method `isCallerAdmin`, and show a clear English error message that includes the canister ID `gkorp-uqaaa-aaaab-qeptq-cai` and a recommended recovery action (restart/redeploy the canister and refresh).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-6"
         ],
         "quotes": [
-          "add this logo in place of logo"
+          "Reject code: 5 Reject text: Canister gkorp-uqaaa-aaaab-qeptq-cai is stopped... Method name: isCallerAdmin Error code: IC0508"
         ]
       },
       "acceptanceCriteria": [
-        "A logo image file exists at frontend/public/assets/logo-job.jpg and is included in the production build.",
-        "Landing page hero logo displays the new logo (no broken image).",
-        "Landing page footer logo displays the new logo (no broken image).",
-        "Dashboard header and footer logos display the new logo (no broken image).",
-        "Admin header logo displays the new logo (no broken image).",
-        "No code changes are required to existing image src paths (they remain /assets/logo-job.jpg)."
+        "When `actor.isCallerAdmin()` fails with a message containing \"is stopped\" and/or \"IC0508\" and/or \"Reject code: 5\", the UI shows an English error explaining the backend canister is stopped and includes the canister ID `gkorp-uqaaa-aaaab-qeptq-cai`.",
+        "The admin UI does not get stuck on an indefinite \"Checking admin access...\" loading state after the failure; the user is returned to the admin gate with the error visible and can retry.",
+        "The error shown to the user is not a raw replica/agent error dump; it is a short, actionable message.",
+        "Session state is not marked as unlocked when this failure occurs (i.e., `admin_session_unlocked` is not set/kept as `true`)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Centralize formatting of backend/replica errors for admin-related actions (admin unlock and admin CRUD mutations) to ensure errors caused by a stopped canister are consistently recognized and displayed as a friendly English message rather than generic/technical output.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "The replica returned a rejection error... Canister ... is stopped ... IC0508"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin unlock (password gate) and admin mutations (e.g., create/update/delete posts/vacancies) display the same friendly English message for \"canister is stopped\"/IC0508 errors.",
+        "Other existing authorization errors (e.g., \"Unauthorized\" / \"Only admins\") continue to display the existing access-denied guidance and continue to lock the admin session as currently implemented."
       ]
     }
   ],
   "constraints": [
-    "Do not modify files under frontend/src/components/ui (read-only).",
-    "Keep existing <img src=\"/assets/logo-job.jpg\" ... /> references working without changing their src."
+    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (immutable paths).",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Creating additional logo variants (SVG, monochrome, favicon) unless explicitly requested.",
-    "Changing layout, copy, or brand colors beyond what is necessary to swap the logo asset."
+    "Restarting/starting the stopped canister `gkorp-uqaaa-aaaab-qeptq-cai` (this is an operational/deployment action outside the app code).",
+    "Changing Internet Identity authentication behavior."
   ],
   "imageRequirements": {
     "required": [],
-    "edits": [
-      "Use the uploaded logo as the app logo asset (logo job-2.jpg > logo-job.jpg)"
-    ]
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
+    "edits": []
   }
 }

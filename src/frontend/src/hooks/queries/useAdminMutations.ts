@@ -1,25 +1,26 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from '../useActor';
 import { useAdminPassword } from '../useAdminPassword';
+import { formatAdminError } from '../../utils/adminErrorFormatting';
 import type { JobVacancy, ExternalBlob } from '../../backend';
 
 export function useCreateJobVacancy() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
-  const { sessionPassword, lock } = useAdminPassword();
+  const { lock } = useAdminPassword();
 
   return useMutation({
     mutationFn: async (vacancy: JobVacancy) => {
-      if (!actor) throw new Error('Actor not available');
-      if (!sessionPassword) throw new Error('Admin password required');
+      if (!actor) throw new Error('System not ready. Please try again.');
 
       try {
-        return await actor.createJobVacancy(vacancy, sessionPassword);
+        return await actor.createJobVacancy(vacancy);
       } catch (error: any) {
-        if (error.message?.includes('Unauthorized') || error.message?.includes('trap')) {
+        const errorResult = formatAdminError(error);
+        if (errorResult.shouldLockSession) {
           lock();
         }
-        throw error;
+        throw new Error(errorResult.userMessage);
       }
     },
     onSuccess: () => {
@@ -31,20 +32,20 @@ export function useCreateJobVacancy() {
 export function useUpdateJobVacancy() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
-  const { sessionPassword, lock } = useAdminPassword();
+  const { lock } = useAdminPassword();
 
   return useMutation({
     mutationFn: async ({ jobId, vacancy }: { jobId: bigint; vacancy: JobVacancy }) => {
-      if (!actor) throw new Error('Actor not available');
-      if (!sessionPassword) throw new Error('Admin password required');
+      if (!actor) throw new Error('System not ready. Please try again.');
 
       try {
-        return await actor.updateJobVacancy(jobId, vacancy, sessionPassword);
+        return await actor.updateJobVacancy(jobId, vacancy);
       } catch (error: any) {
-        if (error.message?.includes('Unauthorized') || error.message?.includes('trap')) {
+        const errorResult = formatAdminError(error);
+        if (errorResult.shouldLockSession) {
           lock();
         }
-        throw error;
+        throw new Error(errorResult.userMessage);
       }
     },
     onSuccess: () => {
@@ -56,20 +57,20 @@ export function useUpdateJobVacancy() {
 export function useDeleteJobVacancy() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
-  const { sessionPassword, lock } = useAdminPassword();
+  const { lock } = useAdminPassword();
 
   return useMutation({
     mutationFn: async (jobId: bigint) => {
-      if (!actor) throw new Error('Actor not available');
-      if (!sessionPassword) throw new Error('Admin password required');
+      if (!actor) throw new Error('System not ready. Please try again.');
 
       try {
-        return await actor.deleteJobVacancy(jobId, sessionPassword);
+        return await actor.deleteJobVacancy(jobId);
       } catch (error: any) {
-        if (error.message?.includes('Unauthorized') || error.message?.includes('trap')) {
+        const errorResult = formatAdminError(error);
+        if (errorResult.shouldLockSession) {
           lock();
         }
-        throw error;
+        throw new Error(errorResult.userMessage);
       }
     },
     onSuccess: () => {
@@ -81,20 +82,20 @@ export function useDeleteJobVacancy() {
 export function useCreatePost() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
-  const { sessionPassword, lock } = useAdminPassword();
+  const { lock } = useAdminPassword();
 
   return useMutation({
     mutationFn: async ({ title, content, image }: { title: string; content: string; image: ExternalBlob | null }) => {
-      if (!actor) throw new Error('Actor not available');
-      if (!sessionPassword) throw new Error('Admin password required');
+      if (!actor) throw new Error('System not ready. Please try again.');
 
       try {
-        return await actor.createPost(title, content, image, sessionPassword);
+        return await actor.createPost(title, content, image);
       } catch (error: any) {
-        if (error.message?.includes('Unauthorized') || error.message?.includes('trap')) {
+        const errorResult = formatAdminError(error);
+        if (errorResult.shouldLockSession) {
           lock();
         }
-        throw error;
+        throw new Error(errorResult.userMessage);
       }
     },
     onSuccess: () => {
@@ -106,7 +107,7 @@ export function useCreatePost() {
 export function useUpdatePost() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
-  const { sessionPassword, lock } = useAdminPassword();
+  const { lock } = useAdminPassword();
 
   return useMutation({
     mutationFn: async ({
@@ -120,16 +121,16 @@ export function useUpdatePost() {
       content: string;
       image: ExternalBlob | null;
     }) => {
-      if (!actor) throw new Error('Actor not available');
-      if (!sessionPassword) throw new Error('Admin password required');
+      if (!actor) throw new Error('System not ready. Please try again.');
 
       try {
-        return await actor.updatePost(postId, title, content, image, sessionPassword);
+        return await actor.updatePost(postId, title, content, image);
       } catch (error: any) {
-        if (error.message?.includes('Unauthorized') || error.message?.includes('trap')) {
+        const errorResult = formatAdminError(error);
+        if (errorResult.shouldLockSession) {
           lock();
         }
-        throw error;
+        throw new Error(errorResult.userMessage);
       }
     },
     onSuccess: () => {
@@ -141,20 +142,20 @@ export function useUpdatePost() {
 export function useDeletePost() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
-  const { sessionPassword, lock } = useAdminPassword();
+  const { lock } = useAdminPassword();
 
   return useMutation({
     mutationFn: async (postId: bigint) => {
-      if (!actor) throw new Error('Actor not available');
-      if (!sessionPassword) throw new Error('Admin password required');
+      if (!actor) throw new Error('System not ready. Please try again.');
 
       try {
-        return await actor.deletePost(postId, sessionPassword);
+        return await actor.deletePost(postId);
       } catch (error: any) {
-        if (error.message?.includes('Unauthorized') || error.message?.includes('trap')) {
+        const errorResult = formatAdminError(error);
+        if (errorResult.shouldLockSession) {
           lock();
         }
-        throw error;
+        throw new Error(errorResult.userMessage);
       }
     },
     onSuccess: () => {

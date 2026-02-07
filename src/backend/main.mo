@@ -5,6 +5,7 @@ import Time "mo:core/Time";
 import Iter "mo:core/Iter";
 import Order "mo:core/Order";
 import Text "mo:core/Text";
+import Int "mo:core/Int";
 import Runtime "mo:core/Runtime";
 import MixinAuthorization "authorization/MixinAuthorization";
 import MixinStorage "blob-storage/Mixin";
@@ -135,8 +136,12 @@ actor {
     userProfiles.get(user);
   };
 
-  // User Search with Password-Based Admin Auth
-  public query ({ caller }) func authorizedUserSearch(_adminPassword : Text, searchTerm : ?Text) : async [SearchableUserProfile] {
+  // User Search - Admin Only
+  public query ({ caller }) func authorizedUserSearch(searchTerm : ?Text) : async [SearchableUserProfile] {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can search users");
+    };
+
     let allProfiles = userProfiles.toArray();
     let filtered = allProfiles.filter(
       func((principal, profile)) {
@@ -168,8 +173,12 @@ actor {
     mapped;
   };
 
-  // Job Vacancies
-  public shared ({ caller }) func createJobVacancy(vacancy : JobVacancy, _adminPassword : Text) : async Nat {
+  // Job Vacancies - Admin Only for Create/Update/Delete
+  public shared ({ caller }) func createJobVacancy(vacancy : JobVacancy) : async Nat {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can create job vacancies");
+    };
+
     let jobId = nextJobId;
     nextJobId += 1;
 
@@ -183,7 +192,11 @@ actor {
     jobId;
   };
 
-  public shared ({ caller }) func updateJobVacancy(jobId : Nat, vacancy : JobVacancy, _adminPassword : Text) : async () {
+  public shared ({ caller }) func updateJobVacancy(jobId : Nat, vacancy : JobVacancy) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update job vacancies");
+    };
+
     switch (jobVacancies.get(jobId)) {
       case (null) { Runtime.trap("Job vacancy does not exist") };
       case (?existing) {
@@ -197,15 +210,20 @@ actor {
     };
   };
 
-  public shared ({ caller }) func deleteJobVacancy(jobId : Nat, _adminPassword : Text) : async () {
+  public shared ({ caller }) func deleteJobVacancy(jobId : Nat) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can delete job vacancies");
+    };
+
     jobVacancies.remove(jobId);
   };
 
+  // Public access to view job vacancies
   public query func getJobVacancies() : async [JobVacancy] {
     jobVacancies.values().toArray().sort();
   };
 
-  public query ({ caller }) func searchJobVacancies(searchTerm : ?Text) : async [JobVacancy] {
+  public query func searchJobVacancies(searchTerm : ?Text) : async [JobVacancy] {
     let filtered = jobVacancies.values().toArray().sort().filter(
       func(vacancy) {
         switch (searchTerm) {
@@ -220,7 +238,7 @@ actor {
     filtered;
   };
 
-  public query ({ caller }) func getJobVacancy(jobId : Nat) : async JobVacancy {
+  public query func getJobVacancy(jobId : Nat) : async JobVacancy {
     switch (jobVacancies.get(jobId)) {
       case (null) { Runtime.trap("Job vacancy does not exist") };
       case (?job) { job };
@@ -288,8 +306,12 @@ actor {
     };
   };
 
-  // Admin Posts/Updates
-  public shared ({ caller }) func createPost(title : Text, content : Text, image : ?Storage.ExternalBlob, _adminPassword : Text) : async Nat {
+  // Admin Posts/Updates - Admin Only
+  public shared ({ caller }) func createPost(title : Text, content : Text, image : ?Storage.ExternalBlob) : async Nat {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can create posts");
+    };
+
     let postId = nextPostId;
     nextPostId += 1;
 
@@ -306,7 +328,11 @@ actor {
     postId;
   };
 
-  public shared ({ caller }) func updatePost(postId : Nat, title : Text, content : Text, image : ?Storage.ExternalBlob, _adminPassword : Text) : async () {
+  public shared ({ caller }) func updatePost(postId : Nat, title : Text, content : Text, image : ?Storage.ExternalBlob) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update posts");
+    };
+
     switch (posts.get(postId)) {
       case (null) { Runtime.trap("Post does not exist") };
       case (?existing) {
@@ -323,15 +349,20 @@ actor {
     };
   };
 
-  public shared ({ caller }) func deletePost(postId : Nat, _adminPassword : Text) : async () {
+  public shared ({ caller }) func deletePost(postId : Nat) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can delete posts");
+    };
+
     posts.remove(postId);
   };
 
+  // Public access to view posts
   public query func getPosts() : async [Post] {
     posts.values().toArray().sort();
   };
 
-  // Messaging
+  // Messaging - User Only
   public shared ({ caller }) func sendMessage(receiver : Principal, content : Text) : async Nat {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can send messages");

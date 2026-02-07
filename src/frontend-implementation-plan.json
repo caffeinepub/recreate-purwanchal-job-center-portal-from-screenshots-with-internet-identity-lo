@@ -1,24 +1,57 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Swap static app logo asset to new uploaded image",
+  "title": "Friendly admin error handling when backend canister is stopped (IC0508 / Reject code 5)",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Replace the existing static logo file so all current /assets/logo-job.jpg <img> usages render the new uploaded logo without changing any src paths.",
+      "summary": "Show a clear, actionable English error during admin access checks/unlock when replica rejection indicates the backend canister is stopped (IC0508 / Reject code 5), and ensure admin session is not unlocked.",
       "acceptanceCriteria": [
-        "A logo image file exists at frontend/public/assets/logo-job.jpg and is included in the production build.",
-        "Landing page hero logo displays the new logo (no broken image).",
-        "Landing page footer logo displays the new logo (no broken image).",
-        "Dashboard header and footer logos display the new logo (no broken image).",
-        "Admin header logo displays the new logo (no broken image).",
-        "No code changes are required to existing image src paths (they remain /assets/logo-job.jpg)."
+        "When `actor.isCallerAdmin()` fails with a message containing \"is stopped\" and/or \"IC0508\" and/or \"Reject code: 5\", the UI shows an English error explaining the backend canister is stopped and includes the canister ID `gkorp-uqaaa-aaaab-qeptq-cai`.",
+        "The admin UI does not get stuck on an indefinite \"Checking admin access...\" loading state after the failure; the user is returned to the admin gate with the error visible and can retry.",
+        "The error shown to the user is not a raw replica/agent error dump; it is a short, actionable message.",
+        "Session state is not marked as unlocked when this failure occurs (i.e., `admin_session_unlocked` is not set/kept as `true`)."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/logo-job.jpg",
+          "path": "frontend/src/utils/adminErrorFormatting.ts",
+          "operation": "create",
+          "description": "Add a centralized helper that recognizes stopped-canister replica rejection patterns (\"is stopped\", \"IC0508\", \"Reject code: 5\") and returns a short English userMessage that includes canister ID `gkorp-uqaaa-aaaab-qeptq-cai` plus a recovery action (restart/redeploy the canister and refresh). Also include helpers for detecting authorization-style errors while preserving existing guidance. Use this helper for admin flows. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useAdminPassword.ts",
           "operation": "modify",
-          "description": "Replace the existing logo asset with the uploaded image (use uploaded \"logo job-2.jpg\" as the source), keeping the exact filename and location so all existing <img src=\"/assets/logo-job.jpg\"> references continue to work without code changes."
+          "description": "Update admin status check and unlock flow to use the centralized admin error formatter; ensure stopped-canister errors clear `admin_session_unlocked`, set `isUnlocked` to false, and expose a friendly error string to the UI. Ensure `isChecking` always resolves (including when the actor is unavailable or the check fails) so the UI never remains stuck in \"Checking admin access...\". Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/admin/AdminPasswordGate.tsx",
+          "operation": "modify",
+          "description": "Extend the gate UI to accept and display an initial/admin-check error message (from the admin status check) in English, using the same Alert styling already present, without showing raw replica/agent dumps. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/admin/AdminLayout.tsx",
+          "operation": "modify",
+          "description": "Wire the new admin-check error state from `useAdminPassword` into `AdminPasswordGate` so that when `isCallerAdmin` fails due to stopped canister, the user is returned to the password gate with the friendly message visible and can retry. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Centralize admin-related backend/replica error formatting so stopped-canister errors are consistently shown as a friendly English message across admin unlock and admin CRUD mutations, while preserving existing unauthorized guidance and admin-lock behavior.",
+      "acceptanceCriteria": [
+        "Admin unlock (password gate) and admin mutations (e.g., create/update/delete posts/vacancies) display the same friendly English message for \"canister is stopped\"/IC0508 errors.",
+        "Other existing authorization errors (e.g., \"Unauthorized\" / \"Only admins\") continue to display the existing access-denied guidance and continue to lock the admin session as currently implemented."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/queries/useAdminMutations.ts",
+          "operation": "modify",
+          "description": "Replace the local error formatting/locking logic with the centralized formatter so that stopped-canister errors (IC0508 / Reject code 5 / \"is stopped\") show the same friendly message as admin unlock. Preserve current behavior for authorization errors (keep existing access-denied guidance and continue to lock the admin session on those). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useAdminPassword.ts",
+          "operation": "modify",
+          "description": "Ensure admin unlock and stored-session admin re-check both rely on the same centralized admin error formatter so messaging is consistent with admin mutations. Preserve existing authorization-denied behavior per the authorization component guidance (do not unlock, and clear any unlocked session marker). Verify the component's usage instructions before implementing."
         }
       ]
     }

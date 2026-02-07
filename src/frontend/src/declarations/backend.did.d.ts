@@ -94,16 +94,13 @@ export interface _SERVICE {
   'applyForJob' : ActorMethod<[bigint, string, [] | [ExternalBlob]], bigint>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'authorizedUserSearch' : ActorMethod<
-    [string, [] | [string]],
+    [[] | [string]],
     Array<SearchableUserProfile>
   >,
-  'createJobVacancy' : ActorMethod<[JobVacancy, string], bigint>,
-  'createPost' : ActorMethod<
-    [string, string, [] | [ExternalBlob], string],
-    bigint
-  >,
-  'deleteJobVacancy' : ActorMethod<[bigint, string], undefined>,
-  'deletePost' : ActorMethod<[bigint, string], undefined>,
+  'createJobVacancy' : ActorMethod<[JobVacancy], bigint>,
+  'createPost' : ActorMethod<[string, string, [] | [ExternalBlob]], bigint>,
+  'deleteJobVacancy' : ActorMethod<[bigint], undefined>,
+  'deletePost' : ActorMethod<[bigint], undefined>,
   'getAllApplications' : ActorMethod<[], Array<Application>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
@@ -122,9 +119,9 @@ export interface _SERVICE {
     [bigint, ApplicationStatus],
     undefined
   >,
-  'updateJobVacancy' : ActorMethod<[bigint, JobVacancy, string], undefined>,
+  'updateJobVacancy' : ActorMethod<[bigint, JobVacancy], undefined>,
   'updatePost' : ActorMethod<
-    [bigint, string, string, [] | [ExternalBlob], string],
+    [bigint, string, string, [] | [ExternalBlob]],
     undefined
   >,
 }

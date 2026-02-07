@@ -1,13 +1,14 @@
 import { Outlet, useNavigate, useLocation } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
-import { LogOut, Briefcase, FileText, Shield, Lock } from 'lucide-react';
+import { Briefcase, FileText, Shield, Lock, Loader2 } from 'lucide-react';
 import { useAdminPassword } from '../../hooks/useAdminPassword';
 import AdminPasswordGate from '../../components/admin/AdminPasswordGate';
+import Logo from '../../components/branding/Logo';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isUnlocked, unlock, lock } = useAdminPassword();
+  const { isUnlocked, isChecking, checkError, unlock, lock } = useAdminPassword();
 
   const handleLock = () => {
     lock();
@@ -25,8 +26,19 @@ export default function AdminLayout() {
     return location.pathname.startsWith(path);
   };
 
+  if (isChecking) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Checking admin access...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!isUnlocked) {
-    return <AdminPasswordGate onUnlock={unlock} />;
+    return <AdminPasswordGate onUnlock={unlock} initialError={checkError} />;
   }
 
   return (
@@ -36,7 +48,7 @@ export default function AdminLayout() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src="/assets/logo-job.jpg" alt="Logo" className="w-12 h-12 rounded-full object-cover shadow-md" />
+              <Logo size="sm" />
               <div>
                 <h1 className="text-2xl font-bold text-blue-700 flex items-center gap-2">
                   <Shield className="w-6 h-6" />

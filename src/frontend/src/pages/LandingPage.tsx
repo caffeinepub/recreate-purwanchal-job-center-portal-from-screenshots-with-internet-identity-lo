@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Briefcase, Users, TrendingUp, Phone, MapPin } from 'lucide-react';
 import { SiFacebook, SiX, SiWhatsapp, SiInstagram } from 'react-icons/si';
 import { Button } from '@/components/ui/button';
+import Logo from '../components/branding/Logo';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -44,11 +45,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-8">
-          <img
-            src="/assets/logo-job.jpg"
-            alt="Purwanchal Job Center"
-            className="w-32 h-32 mx-auto mb-6 rounded-full shadow-lg object-cover"
-          />
+          <Logo size="lg" className="mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl font-bold text-blue-700 mb-3">Purwanchal Job Center</h1>
           <p className="text-lg text-gray-600 mb-2">Job Center in Birtamode, Jhapa, Nepal</p>
           <p className="text-gray-600 max-w-3xl mx-auto">
@@ -168,7 +165,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <img src="/assets/logo-job.jpg" alt="Logo" className="w-12 h-12 rounded-full object-cover" />
+              <Logo size="sm" />
               <div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Phone className="w-4 h-4 text-red-600" />

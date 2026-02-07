@@ -3,36 +3,45 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Shield, Lock } from 'lucide-react';
+import { Shield, Lock, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import Logo from '../branding/Logo';
 
 interface AdminPasswordGateProps {
-  onUnlock: (password: string) => boolean;
+  onUnlock: (password: string) => Promise<{ success: boolean; error?: string }>;
+  initialError?: string;
 }
 
-export default function AdminPasswordGate({ onUnlock }: AdminPasswordGateProps) {
+export default function AdminPasswordGate({ onUnlock, initialError }: AdminPasswordGateProps) {
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(initialError || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
 
-    const success = onUnlock(password);
-    
-    if (!success) {
-      setError('Incorrect password. Please try again.');
+    try {
+      const result = await onUnlock(password);
+      
+      if (!result.success) {
+        setError(result.error || 'Access denied. Please check your credentials.');
+        setPassword('');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred. Please try again.');
       setPassword('');
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    setIsSubmitting(false);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-50 to-blue-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="text-center">
+          <Logo size="md" className="mx-auto mb-4" />
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Shield className="w-8 h-8 text-blue-600" />
           </div>
@@ -40,6 +49,12 @@ export default function AdminPasswordGate({ onUnlock }: AdminPasswordGateProps) 
           <CardDescription>Enter the admin password to continue</CardDescription>
         </CardHeader>
         <CardContent>
+          {initialError && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{initialError}</AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -54,9 +69,15 @@ export default function AdminPasswordGate({ onUnlock }: AdminPasswordGateProps) 
                   className="pl-10"
                   required
                   autoFocus
+                  disabled={isSubmitting}
                 />
               </div>
-              {error && <p className="text-sm text-red-600">{error}</p>}
+              {error && !initialError && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
             </div>
 
             <Button

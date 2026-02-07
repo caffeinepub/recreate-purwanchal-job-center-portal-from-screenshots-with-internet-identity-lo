@@ -3,28 +3,30 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
-  "imageRequirements": "## Edit Images\n- Use the uploaded logo as the app logo asset (logo job-2.jpg > logo-job.jpg)",
+  "known_issues": [
+    "Admin login fails with IC replica rejection (Reject code 5 / IC0508): canister gkorp-uqaaa-aaaab-qeptq-cai is stopped when calling isCallerAdmin."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-replace-the-existing-static-logo-asset-so-that-all-current-img-src-assets-logo-job-jpg-usages-display-the-newly-uploaded-logo-image",
-      "title": "Replace the existing static logo asset so that all current <img src=\"/assets/logo-job.jpg\" ... /> usages display the newly uploaded logo image.",
+      "id": "feature-update-the-admin-login-unlock-flow-to-gracefully-handle-replica-rejection-errors-that-indicate-the-backend-canister-is-stopped-e-g-reject-code-5-error-code-ic0508-when-calling-the-admin-check-method-iscalleradmin-and-show-a-clear-english-error-message-that-includes-the-canister-id-gkorp-uqaaa-aaaab-qeptq-cai-and-a-recommended-recovery-action-restart-redeploy-the-canister-and-refresh",
+      "title": "Update the admin login/unlock flow to gracefully handle replica rejection errors that indicate the backend canister is stopped (e.g., Reject code: 5 / Error code: IC0508) when calling the admin check method `isCallerAdmin`, and show a clear English error message that includes the canister ID `gkorp-uqaaa-aaaab-qeptq-cai` and a recommended recovery action (restart/redeploy the canister and refresh).",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
-    }
-  ],
-  "new_feature_requests": [
+    },
     {
-      "id": "AR-1",
-      "summary": "Replace the current logo with the provided logo asset",
-      "reqIds": [],
-      "status": "pending"
+      "id": "feature-centralize-formatting-of-backend-replica-errors-for-admin-related-actions-admin-unlock-and-admin-crud-mutations-to-ensure-errors-caused-by-a-stopped-canister-are-consistently-recognized-and-displayed-as-a-friendly-english-message-rather-than-generic-technical-output",
+      "title": "Centralize formatting of backend/replica errors for admin-related actions (admin unlock and admin CRUD mutations) to ensure errors caused by a stopped canister are consistently recognized and displayed as a friendly English message rather than generic/technical output.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
     }
   ],
-  "projectName": "Replace app logo with uploaded asset",
+  "new_feature_requests": [],
+  "projectName": "Handle stopped backend canister during admin login (IC0508 reject code 5)",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

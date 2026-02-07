@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalBlob } from '../backend';
 import { Upload } from 'lucide-react';
+import Logo from '../components/branding/Logo';
 
 export default function OnboardingPage() {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-lg shadow-xl">
         <CardHeader className="text-center">
+          <Logo size="md" className="mx-auto mb-4" />
           <CardTitle className="text-3xl font-bold text-blue-700">Welcome!</CardTitle>
           <CardDescription className="text-base">
             Let's set up your profile to get started with Purwanchal Job Center

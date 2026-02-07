@@ -16,7 +16,7 @@ export default function PostsAdminPage() {
   const { data: posts, isLoading } = useGetPosts();
   const { mutate: createPost, isPending: creating, error: createError } = useCreatePost();
   const { mutate: updatePost, isPending: updating, error: updateError } = useUpdatePost();
-  const { mutate: deletePost, error: deleteError } = useDeletePost();
+  const { mutate: deletePost, isPending: deleting, error: deleteError } = useDeletePost();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);
@@ -26,8 +26,10 @@ export default function PostsAdminPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [removeImage, setRemoveImage] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [dialogError, setDialogError] = useState<string>('');
 
-  const mutationError = createError || updateError || deleteError;
+  const pageError = deleteError;
+  const isSaving = creating || updating;
 
   const resetForm = () => {
     setTitle('');
@@ -36,6 +38,7 @@ export default function PostsAdminPage() {
     setRemoveImage(false);
     setUploadProgress(0);
     setEditingPost(null);
+    setDialogError('');
   };
 
   const handleOpenDialog = (post?: Post) => {
@@ -57,6 +60,7 @@ export default function PostsAdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setDialogError('');
 
     let imageBlob: ExternalBlob | null = null;
 
@@ -79,6 +83,9 @@ export default function PostsAdminPage() {
           onSuccess: () => {
             handleCloseDialog();
           },
+          onError: (error) => {
+            setDialogError(error.message);
+          },
         }
       );
     } else {
@@ -87,6 +94,9 @@ export default function PostsAdminPage() {
         {
           onSuccess: () => {
             handleCloseDialog();
+          },
+          onError: (error) => {
+            setDialogError(error.message);
           },
         }
       );
@@ -117,11 +127,11 @@ export default function PostsAdminPage() {
         </Button>
       </div>
 
-      {mutationError && (
+      {pageError && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            {mutationError instanceof Error ? mutationError.message : 'An error occurred. Please try again.'}
+            {pageError instanceof Error ? pageError.message : 'An error occurred. Please try again.'}
           </AlertDescription>
         </Alert>
       )}
@@ -150,7 +160,7 @@ export default function PostsAdminPage() {
                     <CardDescription>{formatDate(post.createdAt)}</CardDescription>
                   </div>
                   <div className="flex gap-2">
-                    <Button onClick={() => handleOpenDialog(post)} variant="outline" size="sm" className="gap-2">
+                    <Button onClick={() => handleOpenDialog(post)} variant="outline" size="sm" className="gap-2" disabled={deleting}>
                       <Edit className="w-4 h-4" />
                       Edit
                     </Button>
@@ -159,9 +169,10 @@ export default function PostsAdminPage() {
                       variant="outline"
                       size="sm"
                       className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      disabled={deleting}
                     >
                       <Trash2 className="w-4 h-4" />
-                      Delete
+                      {deleting ? 'Deleting...' : 'Delete'}
                     </Button>
                   </div>
                 </div>
@@ -180,7 +191,7 @@ export default function PostsAdminPage() {
       )}
 
       {/* Create/Edit Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={(open) => !isSaving && (open ? setIsDialogOpen(true) : handleCloseDialog())}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingPost ? 'Edit Post' : 'Create Post'}</DialogTitle>
@@ -188,6 +199,14 @@ export default function PostsAdminPage() {
               {editingPost ? 'Update the post details' : 'Add a new announcement'}
             </DialogDescription>
           </DialogHeader>
+
+          {dialogError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{dialogError}</AlertDescription>
+            </Alert>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="title">Title *</Label>
@@ -197,6 +216,7 @@ export default function PostsAdminPage() {
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 placeholder="e.g., New Job Opportunities Available"
+                disabled={isSaving}
               />
             </div>
 
@@ -210,6 +230,7 @@ export default function PostsAdminPage() {
                 rows={8}
                 placeholder="Write your announcement here..."
                 className="resize-none"
+                disabled={isSaving}
               />
             </div>
 
@@ -228,6 +249,7 @@ export default function PostsAdminPage() {
                     variant="destructive"
                     size="sm"
                     className="absolute top-2 right-2 gap-1"
+                    disabled={isSaving}
                   >
                     <X className="w-4 h-4" />
                     Remove
@@ -245,6 +267,7 @@ export default function PostsAdminPage() {
                     setRemoveImage(false);
                   }}
                   className="cursor-pointer"
+                  disabled={isSaving}
                 />
                 <Upload className="w-5 h-5 text-gray-400" />
               </div>
@@ -260,10 +283,10 @@ export default function PostsAdminPage() {
             </div>
 
             <div className="flex gap-3">
-              <Button type="submit" disabled={creating || updating} className="flex-1 bg-blue-600 hover:bg-blue-700">
-                {creating || updating ? 'Saving...' : editingPost ? 'Update Post' : 'Create Post'}
+              <Button type="submit" disabled={isSaving} className="flex-1 bg-blue-600 hover:bg-blue-700">
+                {isSaving ? 'Saving...' : editingPost ? 'Update Post' : 'Create Post'}
               </Button>
-              <Button type="button" onClick={handleCloseDialog} variant="outline" className="flex-1">
+              <Button type="button" onClick={handleCloseDialog} variant="outline" className="flex-1" disabled={isSaving}>
                 Cancel
               </Button>
             </div>

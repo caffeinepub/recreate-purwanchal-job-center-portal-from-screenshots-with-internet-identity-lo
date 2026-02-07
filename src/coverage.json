@@ -1,24 +1,43 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T12:12:14.988Z",
+  "generatedAt": "2026-02-07T11:00:22.092Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Replace the existing static logo asset so that all current <img src=\"/assets/logo-job.jpg\" ... /> usages display the newly uploaded logo image.",
+        "summary": "Update the admin login/unlock flow to gracefully handle replica rejection errors that indicate the backend canister is stopped (e.g., Reject code: 5 / Error code: IC0508) when calling the admin check method `isCallerAdmin`, and show a clear English error message that includes the canister ID `gkorp-uqaaa-aaaab-qeptq-cai` and a recommended recovery action (restart/redeploy the canister and refresh).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/logo-job.jpg"
+          "frontend/src/utils/adminErrorFormatting.ts",
+          "frontend/src/hooks/useAdminPassword.ts",
+          "frontend/src/components/admin/AdminPasswordGate.tsx",
+          "frontend/src/pages/admin/AdminLayout.tsx"
         ],
         "matchedFiles": [
-          "frontend/public/assets/logo-job.jpg"
+          "frontend/src/utils/adminErrorFormatting.ts",
+          "frontend/src/hooks/useAdminPassword.ts",
+          "frontend/src/components/admin/AdminPasswordGate.tsx",
+          "frontend/src/pages/admin/AdminLayout.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Centralize formatting of backend/replica errors for admin-related actions (admin unlock and admin CRUD mutations) to ensure errors caused by a stopped canister are consistently recognized and displayed as a friendly English message rather than generic/technical output.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/queries/useAdminMutations.ts",
+          "frontend/src/hooks/useAdminPassword.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/queries/useAdminMutations.ts",
+          "frontend/src/hooks/useAdminPassword.ts"
         ]
       }
     ]
@@ -26,9 +45,13 @@
   "changedFiles": [
     "build-request.json",
     "feature_evidence.json",
+    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/logo-job.jpg",
-    "frontend/public/assets/logo-job.jpg",
+    "frontend/src/components/admin/AdminPasswordGate.tsx",
+    "frontend/src/hooks/queries/useAdminMutations.ts",
+    "frontend/src/hooks/useAdminPassword.ts",
+    "frontend/src/pages/admin/AdminLayout.tsx",
+    "frontend/src/utils/adminErrorFormatting.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

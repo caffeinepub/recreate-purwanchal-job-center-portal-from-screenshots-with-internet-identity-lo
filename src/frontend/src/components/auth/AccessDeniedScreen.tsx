@@ -2,6 +2,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShieldAlert } from 'lucide-react';
+import Logo from '../branding/Logo';
 
 export default function AccessDeniedScreen() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function AccessDeniedScreen() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center p-4">
       <Card className="max-w-md w-full shadow-xl">
         <CardHeader className="text-center">
+          <Logo size="md" className="mx-auto mb-4" />
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <ShieldAlert className="w-8 h-8 text-red-600" />
           </div>

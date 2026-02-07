@@ -19,7 +19,7 @@ export default function VacanciesAdminPage() {
   const { data: jobs, isLoading } = useGetJobVacancies();
   const { mutate: createJob, isPending: creating, error: createError } = useCreateJobVacancy();
   const { mutate: updateJob, isPending: updating, error: updateError } = useUpdateJobVacancy();
-  const { mutate: deleteJob, error: deleteError } = useDeleteJobVacancy();
+  const { mutate: deleteJob, isPending: deleting, error: deleteError } = useDeleteJobVacancy();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<JobVacancy | null>(null);
@@ -28,8 +28,10 @@ export default function VacanciesAdminPage() {
   const [description, setDescription] = useState('');
   const [salaryRange, setSalaryRange] = useState('');
   const [requirements, setRequirements] = useState('');
+  const [dialogError, setDialogError] = useState<string>('');
 
-  const mutationError = createError || updateError || deleteError;
+  const pageError = deleteError;
+  const isSaving = creating || updating;
 
   const resetForm = () => {
     setTitle('');
@@ -37,6 +39,7 @@ export default function VacanciesAdminPage() {
     setSalaryRange('');
     setRequirements('');
     setEditingJob(null);
+    setDialogError('');
   };
 
   const handleOpenDialog = (job?: JobVacancy) => {
@@ -59,6 +62,7 @@ export default function VacanciesAdminPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setDialogError('');
 
     const reqArray = requirements
       .split('\n')
@@ -81,12 +85,18 @@ export default function VacanciesAdminPage() {
           onSuccess: () => {
             handleCloseDialog();
           },
+          onError: (error) => {
+            setDialogError(error.message);
+          },
         }
       );
     } else {
       createJob(jobData, {
         onSuccess: () => {
           handleCloseDialog();
+        },
+        onError: (error) => {
+          setDialogError(error.message);
         },
       });
     }
@@ -116,11 +126,11 @@ export default function VacanciesAdminPage() {
         </Button>
       </div>
 
-      {mutationError && (
+      {pageError && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            {mutationError instanceof Error ? mutationError.message : 'An error occurred. Please try again.'}
+            {pageError instanceof Error ? pageError.message : 'An error occurred. Please try again.'}
           </AlertDescription>
         </Alert>
       )}
@@ -149,7 +159,7 @@ export default function VacanciesAdminPage() {
                     <CardDescription>Posted {formatDate(job.postedAt)} • {job.salaryRange}</CardDescription>
                   </div>
                   <div className="flex gap-2">
-                    <Button onClick={() => handleOpenDialog(job)} variant="outline" size="sm" className="gap-2">
+                    <Button onClick={() => handleOpenDialog(job)} variant="outline" size="sm" className="gap-2" disabled={deleting}>
                       <Edit className="w-4 h-4" />
                       Edit
                     </Button>
@@ -158,9 +168,10 @@ export default function VacanciesAdminPage() {
                       variant="outline"
                       size="sm"
                       className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      disabled={deleting}
                     >
                       <Trash2 className="w-4 h-4" />
-                      Delete
+                      {deleting ? 'Deleting...' : 'Delete'}
                     </Button>
                   </div>
                 </div>
@@ -183,7 +194,7 @@ export default function VacanciesAdminPage() {
       )}
 
       {/* Create/Edit Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={(open) => !isSaving && (open ? setIsDialogOpen(true) : handleCloseDialog())}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingJob ? 'Edit Job Vacancy' : 'Create Job Vacancy'}</DialogTitle>
@@ -191,6 +202,14 @@ export default function VacanciesAdminPage() {
               {editingJob ? 'Update the job vacancy details' : 'Add a new job posting'}
             </DialogDescription>
           </DialogHeader>
+
+          {dialogError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{dialogError}</AlertDescription>
+            </Alert>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="title">Job Title *</Label>
@@ -200,6 +219,7 @@ export default function VacanciesAdminPage() {
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 placeholder="e.g., Software Engineer"
+                disabled={isSaving}
               />
             </div>
 
@@ -213,6 +233,7 @@ export default function VacanciesAdminPage() {
                 rows={6}
                 placeholder="Describe the job role and responsibilities..."
                 className="resize-none"
+                disabled={isSaving}
               />
             </div>
 
@@ -223,7 +244,8 @@ export default function VacanciesAdminPage() {
                 value={salaryRange}
                 onChange={(e) => setSalaryRange(e.target.value)}
                 required
-                placeholder="e.g., NPR 30,000 - 50,000"
+                placeholder="e.g., $50,000 - $70,000"
+                disabled={isSaving}
               />
             </div>
 
@@ -234,16 +256,17 @@ export default function VacanciesAdminPage() {
                 value={requirements}
                 onChange={(e) => setRequirements(e.target.value)}
                 rows={6}
-                placeholder="Bachelor's degree in Computer Science&#10;2+ years of experience&#10;Strong communication skills"
+                placeholder="Bachelor's degree in Computer Science&#10;3+ years of experience&#10;Proficiency in React and TypeScript"
                 className="resize-none"
+                disabled={isSaving}
               />
             </div>
 
             <div className="flex gap-3">
-              <Button type="submit" disabled={creating || updating} className="flex-1 bg-blue-600 hover:bg-blue-700">
-                {creating || updating ? 'Saving...' : editingJob ? 'Update Vacancy' : 'Create Vacancy'}
+              <Button type="submit" disabled={isSaving} className="flex-1 bg-blue-600 hover:bg-blue-700">
+                {isSaving ? 'Saving...' : editingJob ? 'Update Vacancy' : 'Create Vacancy'}
               </Button>
-              <Button type="button" onClick={handleCloseDialog} variant="outline" className="flex-1">
+              <Button type="button" onClick={handleCloseDialog} variant="outline" className="flex-1" disabled={isSaving}>
                 Cancel
               </Button>
             </div>

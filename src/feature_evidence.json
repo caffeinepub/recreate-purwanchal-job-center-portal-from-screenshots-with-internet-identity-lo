@@ -2,9 +2,14 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-existing-static-logo-asset-so-that-all-current-img-src-assets-logo-job-jpg-usages-display-the-newly-uploaded-logo-image",
-      "featureTitle": "Replace the existing static logo asset so that all current <img src=\"/assets/logo-job.jpg\" ... /> usages display the newly uploaded logo image.",
-      "files": [],
+      "featureId": "feature-update-the-admin-login-unlock-flow-to-gracefully-handle-replica-rejection-errors-that-indicate-the-backend-canister-is-stopped-e-g-reject-code-5-error-code-ic0508-when-calling-the-admin-check-method-iscalleradmin-and-show-a-clear-english-error-message-that-includes-the-canister-id-gkorp-uqaaa-aaaab-qeptq-cai-and-a-recommended-recovery-action-restart-redeploy-the-canister-and-refresh",
+      "featureTitle": "Update the admin login/unlock flow to gracefully handle replica rejection errors that indicate the backend canister is stopped (e.g., Reject code: 5 / Error code: IC0508) when calling the admin check method `isCallerAdmin`, and show a clear English error message that includes the canister ID `gkorp-uqaaa-aaaab-qeptq-cai` and a recommended recovery action (restart/redeploy the canister and refresh).",
+      "files": [
+        "frontend/src/components/admin/AdminPasswordGate.tsx",
+        "frontend/src/hooks/useAdminPassword.ts",
+        "frontend/src/pages/admin/AdminLayout.tsx",
+        "frontend/src/utils/adminErrorFormatting.ts"
+      ],
       "components": [
         "authorization@4.0.0",
         "blob-storage@4.0.0",
@@ -16,6 +21,27 @@
       ],
       "testIds": [
         "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-centralize-formatting-of-backend-replica-errors-for-admin-related-actions-admin-unlock-and-admin-crud-mutations-to-ensure-errors-caused-by-a-stopped-canister-are-consistently-recognized-and-displayed-as-a-friendly-english-message-rather-than-generic-technical-output",
+      "featureTitle": "Centralize formatting of backend/replica errors for admin-related actions (admin unlock and admin CRUD mutations) to ensure errors caused by a stopped canister are consistently recognized and displayed as a friendly English message rather than generic/technical output.",
+      "files": [
+        "frontend/src/hooks/queries/useAdminMutations.ts",
+        "frontend/src/hooks/useAdminPassword.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
       ],
       "confidence": "high"
     }

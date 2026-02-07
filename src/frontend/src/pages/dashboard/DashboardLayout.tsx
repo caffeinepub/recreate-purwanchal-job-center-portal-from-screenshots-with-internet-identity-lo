@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { LogOut, Briefcase, FileText, MessageSquare, Bell, User, Gift, Phone, MapPin } from 'lucide-react';
 import { SiFacebook, SiX, SiWhatsapp, SiInstagram } from 'react-icons/si';
+import Logo from '../../components/branding/Logo';
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ export default function DashboardLayout() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src="/assets/logo-job.jpg" alt="Logo" className="w-12 h-12 rounded-full object-cover shadow-md" />
+              <Logo size="sm" />
               <div>
                 <h1 className="text-2xl font-bold text-blue-700">Purwanchal Job Center</h1>
                 <p className="text-sm text-gray-600">Professional Job Portal</p>
@@ -197,7 +198,7 @@ export default function DashboardLayout() {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <img src="/assets/logo-job.jpg" alt="Logo" className="w-12 h-12 rounded-full object-cover" />
+              <Logo size="sm" />
               <div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Phone className="w-4 h-4 text-red-600" />
